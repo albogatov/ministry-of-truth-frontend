@@ -3,7 +3,8 @@
     <div v-show="false">
       <img src="../../assets/defaultMain.jpg" alt/>
     </div>
-    <CaseSection v-if="this.$parent.currentSection === 'CaseSection'"/>
+    <CaseSection v-if="this.$parent.currentSection === 'CaseSection'"  ref="caseComponent" @mounted="caseSectionMounted" />
+    <MediaSection v-if="this.$parent.currentSection === 'MediaSection'" @switchSectionToCase="switchSectionToCase" ref="mediaComponent"/>
     <v-img :src=getSrc()
            class="ml-auto mr-auto"
            height="850px"
@@ -21,14 +22,16 @@
 
 <script>
 import CaseSection from "@/components/mainPage/sections/CaseSection";
+import MediaSection from "@/components/mainPage/sections/MediaSection";
 // import axios from "axios";
 
 export default {
   name: "MainComponent",
-  components: {CaseSection},
+  components: {CaseSection, MediaSection},
 
   data: () => ({
-    KvartalsList: [],
+    caseSectionReady: false,
+    caseSectionPredefined: null,
     slotSize: 28,
     renderComponent: false,
     mapPath: '',
@@ -36,6 +39,20 @@ export default {
   }),
 
   methods: {
+    caseSectionMounted() {
+      if (this.caseSectionPredefined) {
+        this.$refs.caseComponent.receiveRouteToObject(this.caseSectionPredefined)
+      }
+    },
+    switchSectionToCase(e, obj) {
+      this.caseSectionPredefined = obj
+      this.$emit('switchSection', e)
+      // console.log(obj)
+      // while(!this.caseSectionReady) {
+      //   console.log("loading")
+      // }
+
+    },
     // getListOfKvartals() {
     //   this.KvartalsList = new Array(28)
     //   let str = "/api/app/quarter/map"

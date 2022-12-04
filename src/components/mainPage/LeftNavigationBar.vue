@@ -45,6 +45,11 @@
                        class="navigationButton" outlined>
                   See Cases
                 </v-btn>
+
+                <v-btn @click="setSection('MediaSection')" v-bind="attrs" v-on="on" width="100%"
+                       class="navigationButton" outlined>
+                  See Media
+                </v-btn>
               </div>
 
             </template>

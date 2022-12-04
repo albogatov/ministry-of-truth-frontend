@@ -182,6 +182,17 @@
 
                       <v-select v-model="newCaseState" id="newCaseState" :items="caseStates" label="Choose state">
                       </v-select>
+
+                      <v-list class="overflow-y-auto" max-height="400" v-for="media in chosenCaseMedia"
+                              :key="media.id">
+                        <v-list-tile-content>
+                          <v-list-tile-title v-text="media.title"></v-list-tile-title>
+                        </v-list-tile-content>
+
+                        <v-btn icon>
+                          <v-icon>edit</v-icon>
+                        </v-btn>
+                      </v-list>
                     </v-container>
                   </v-card-text>
                   <v-card-actions>
@@ -203,6 +214,113 @@
                   </v-card-actions>
                 </v-card>
               </v-dialog>
+<!--              <v-dialog v-model="dialog" v-if="this.predefinedCase != null">-->
+<!--                <v-card>-->
+<!--                  <v-card-text class="font-weight-medium" style="font-size: 15pt; " v-if="this.caseEditorMode">-->
+
+<!--                    <v-text-->
+<!--                        light-->
+<!--                        label="Title"-->
+<!--                        v-model="object.title"-->
+<!--                        background-color=#EDF2F7-->
+<!--                        outlined-->
+<!--                        style="border-radius: 10px;"-->
+<!--                    />-->
+
+<!--                    <v-text-field-->
+<!--                        light-->
+<!--                        label="Description"-->
+<!--                        v-model="description"-->
+<!--                        name="Description"-->
+<!--                        type="text"-->
+<!--                        :rules="rules.clearFieldValid"-->
+<!--                        :color=changeColor()-->
+<!--                        background-color=#EDF2F7-->
+<!--                        outlined-->
+<!--                        style="border-radius: 10px;"-->
+<!--                    />-->
+
+<!--                    <v-select v-model="selectedEmployee" id="emplList" :items="employees" label="Choose assignee"-->
+<!--                              :item-text="'name'" :item-value="'id'">-->
+<!--                      <option v-for="emp in employees" v-bind:key="emp.id" v-bind:value="emp.name">-->
+<!--                        {{ emp.name }}-->
+<!--                      </option>-->
+<!--                    </v-select>-->
+
+<!--                    <v-select v-model="newCaseState" id="newCaseState" :items="caseStates" label="Choose state">-->
+<!--                    </v-select>-->
+
+<!--                    <v-btn style="margin-left: 25%; margin-bottom: 5%"-->
+<!--                           :color=changeColor()-->
+<!--                           outlined-->
+<!--                           :loading="loadingSave"-->
+<!--                           @click="submitCase"-->
+<!--                    >-->
+<!--                      <v-icon style="margin-right: 8px">mdi-cloud-upload</v-icon>-->
+<!--                      Submit the case-->
+<!--                    </v-btn>-->
+
+<!--                  </v-card-text>-->
+<!--                </v-card>-->
+<!--                <v-card>-->
+<!--                  <v-card-title>-->
+<!--                    <span class="text-h5">{{ this.selectedCase.title }}</span>-->
+<!--                  </v-card-title>-->
+<!--                  <v-card-text>-->
+<!--                    <v-container>-->
+<!--                      <v-text-field-->
+<!--                          light-->
+<!--                          label="Description"-->
+<!--                          v-model="selectedCase.description"-->
+<!--                          name="Description"-->
+<!--                          type="text"-->
+<!--                          :rules="rules.clearFieldValid"-->
+<!--                          :color=changeColor()-->
+<!--                          background-color=#EDF2F7-->
+<!--                          outlined-->
+<!--                          style="border-radius: 10px;"-->
+<!--                      />-->
+<!--                      <v-select v-model="selectedEmployee" id="emplList" :items="employees" label="Choose assignee"-->
+<!--                                :item-text="'name'" :item-value="'id'">-->
+<!--                        <option v-for="emp in employees" v-bind:key="emp.id" v-bind:value="emp.name">-->
+<!--                          {{ emp.name }}-->
+<!--                        </option>-->
+<!--                      </v-select>-->
+
+<!--                      <v-select v-model="newCaseState" id="newCaseState" :items="caseStates" label="Choose state">-->
+<!--                      </v-select>-->
+
+<!--                      <v-list class="overflow-y-auto" max-height="400" v-for="media in chosenCaseMedia"-->
+<!--                              :key="media.id">-->
+<!--                        <v-list-tile-content>-->
+<!--                          <v-list-tile-title v-text="media.title"></v-list-tile-title>-->
+<!--                        </v-list-tile-content>-->
+
+<!--                        <v-btn icon>-->
+<!--                          <v-icon>edit</v-icon>-->
+<!--                        </v-btn>-->
+<!--                      </v-list>-->
+<!--                    </v-container>-->
+<!--                  </v-card-text>-->
+<!--                  <v-card-actions>-->
+<!--                    <v-spacer></v-spacer>-->
+<!--                    <v-btn-->
+<!--                        color="blue darken-1"-->
+<!--                        text-->
+<!--                        @click="dialog = false; object = null"-->
+<!--                    >-->
+<!--                      Close-->
+<!--                    </v-btn>-->
+<!--                    <v-btn-->
+<!--                        color="blue darken-1"-->
+<!--                        text-->
+<!--                        @click="updateCase(selectedCase)"-->
+<!--                    >-->
+<!--                      Save-->
+<!--                    </v-btn>-->
+<!--                  </v-card-actions>-->
+<!--                </v-card>-->
+<!--              </v-dialog>-->
             </div>
           </v-list-item-group>
         </v-list>
@@ -241,8 +359,11 @@ export default {
     caseTitle: '',
     description: '',
     object: '',
+    predefinedCase: null,
     selectedCase: [],
+    chosenCaseMedia: [],
     isFetchingCases: true,
+    idFetchingMedia: true,
 
     Case: [],
 
@@ -257,6 +378,14 @@ export default {
     },
   }),
   methods: {
+
+    receiveRouteToObject(obj) {
+      // while(this.isFetchingCases)
+      //   console.log('loading')
+      this.selectedCase = obj
+      this.dialog = true
+    },
+
     getEmployees() {
       let str = "/api/app/employee/all"
       axios.get(str, this.getHeader())
@@ -289,6 +418,22 @@ export default {
             }
           }).catch(err => {
         if (this.doRefresh(err.response.status)) this.getListOfCases()
+      })
+    },
+
+    getListOfMedia() {
+      let str = "/api/app/caseMedia/media"
+
+      console.log("HMMM" + this.selectedCase)
+      axios.create(this.getHeader()).post(str, this.selectedCase).then(resp => {
+        console.log(resp.data)
+        this.chosenCaseMedia = []
+        for (let i = 0; i < resp.data.length; i++) {
+          this.chosenCaseMedia.push(resp.data[i])
+          this.isFetchingMedia = false
+        }
+      }).catch(err => {
+        console.log(err)
       })
     },
 
@@ -346,9 +491,12 @@ export default {
     },
 
     openCase(object) {
+      console.log("CLICK BUTTON WORKED")
       this.caseViewMode = true
       this.selectedCase = object
-      console.log(this.AllCases)
+      this.object = object
+      console.log("opening case" + object.id)
+      this.getListOfMedia()
     },
 
     updateElements(CaseList) {
@@ -377,6 +525,10 @@ export default {
     //this.updateOverlay()
     this.getEmployees()
     this.getListOfCases()
+  },
+  mounted: function() {
+    console.log("YEEEEEEAAAA")
+    this.$emit("mounted");
   }
 }
 </script>

@@ -4,20 +4,21 @@
       <LeftNavigationBar @switchSection="switchSection"/>
     </v-col>
     <v-col cols="max">
-      <CityComponent>
-      </CityComponent>
+      <MainComponent @switchSection="switchSection">
+      </MainComponent>
     </v-col>
   </v-row>
 </template>
 
 <script>
 import LeftNavigationBar from "@/components/mainPage/LeftNavigationBar";
-import CityComponent from "@/components/mainPage/MainComponent";
+import MainComponent from "@/components/mainPage/MainComponent";
 export default {
   name: "Main",
-  components: {LeftNavigationBar, CityComponent},
+  components: {LeftNavigationBar, MainComponent},
   data: () => ({
-    currentSection: ''
+    currentSection: '',
+    rerouteCase: ''
   }),
   methods: {
     switchSection(e) {

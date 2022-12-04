@@ -31,7 +31,7 @@ Vue.mixin({
             }
         },
         getHeader() {
-            axios.defaults.headers.common['Content-type'] = 'application/json'
+            //axios.defaults.headers.common['Content-type'] = 'application/json'
             console.log(localStorage.token)
             return {
                 baseURL: this.hostname,
