@@ -1,4 +1,4 @@
-# ministry-of-truth-frontend
+# cityproject
 
 ## Project setup
 ```
