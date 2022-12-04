@@ -1,4 +1,4 @@
-# cityproject
+# 1984 Ministry of Truth project
 
 ## Project setup
 ```
