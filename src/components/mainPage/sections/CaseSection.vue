@@ -186,109 +186,54 @@
                       <v-list class="overflow-y-auto" max-height="400" v-for="media in chosenCaseMedia"
                               :key="media.id">
                         <v-list-tile-content>
-                          <v-list-tile-title v-text="media.title"></v-list-tile-title>
+                          <v-btn
+                              color="primary"
+                              dark
+                              v-text="'Media-' + media.id + ': ' + media.title"
+                              @click="openLinkedMedia(media)"
+                              width="80%"
+                              height="5%"
+                          >
+                            Open Case
+                          </v-btn>
+                          <v-btn
+                              color="primary"
+                              dark
+                              @click="removeLinkWithMedia(media)"
+                              width="20%"
+                              height="5%"
+                          >
+                            Remove Link
+                          </v-btn>
                         </v-list-tile-content>
-
-                        <v-btn icon>
-                          <v-icon>edit</v-icon>
-                        </v-btn>
                       </v-list>
+                      <v-btn style="margin-left: 25%; margin-bottom: 5%"
+                             :color=changeColor()
+                             outlined
+                             :loading="loadingSave"
+                             @click="linkToMedia = true"
+                      >
+                        <v-icon style="margin-right: 8px">mdi-cloud-upload</v-icon>
+                        Link to another media
+                      </v-btn>
+                      <v-select v-model="mMedia" id="categoryList" :items="AllMedia" label="Choose media"
+                                :item-text="'title'" :item-value="'id'" v-if="linkToMedia" :rules="rules.clearFieldValid">
+                        <option v-for="mmedia in AllMedia" v-bind:key="mmedia.id" v-bind:value="mmedia.title">
+                          {{ mmedia.title }}
+                        </option>
+                      </v-select>
+                      <v-btn style="margin-left: 25%; margin-bottom: 5%"
+                             :color=changeColor()
+                             outlined
+                             :loading="loadingSave"
+                             @click="createLinkToMedia(mMedia, selectedCase)" v-if="linkToMedia"
+                      >
+                        <v-icon style="margin-right: 8px">mdi-cloud-upload</v-icon>
+                        Create the link
+                      </v-btn>
+
                     </v-container>
                   </v-card-text>
-                  <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn
-                        color="blue darken-1"
-                        text
-                        @click="dialog = false"
-                    >
-                      Close
-                    </v-btn>
-                    <v-btn
-                        color="blue darken-1"
-                        text
-                        @click="updateCase(selectedCase)"
-                    >
-                      Save
-                    </v-btn>
-                  </v-card-actions>
-                </v-card>
-              </v-dialog>
-<!--              <v-dialog v-model="dialog" v-if="this.predefinedCase != null">-->
-<!--                <v-card>-->
-<!--                  <v-card-text class="font-weight-medium" style="font-size: 15pt; " v-if="this.caseEditorMode">-->
-
-<!--                    <v-text-->
-<!--                        light-->
-<!--                        label="Title"-->
-<!--                        v-model="object.title"-->
-<!--                        background-color=#EDF2F7-->
-<!--                        outlined-->
-<!--                        style="border-radius: 10px;"-->
-<!--                    />-->
-
-<!--                    <v-text-field-->
-<!--                        light-->
-<!--                        label="Description"-->
-<!--                        v-model="description"-->
-<!--                        name="Description"-->
-<!--                        type="text"-->
-<!--                        :rules="rules.clearFieldValid"-->
-<!--                        :color=changeColor()-->
-<!--                        background-color=#EDF2F7-->
-<!--                        outlined-->
-<!--                        style="border-radius: 10px;"-->
-<!--                    />-->
-
-<!--                    <v-select v-model="selectedEmployee" id="emplList" :items="employees" label="Choose assignee"-->
-<!--                              :item-text="'name'" :item-value="'id'">-->
-<!--                      <option v-for="emp in employees" v-bind:key="emp.id" v-bind:value="emp.name">-->
-<!--                        {{ emp.name }}-->
-<!--                      </option>-->
-<!--                    </v-select>-->
-
-<!--                    <v-select v-model="newCaseState" id="newCaseState" :items="caseStates" label="Choose state">-->
-<!--                    </v-select>-->
-
-<!--                    <v-btn style="margin-left: 25%; margin-bottom: 5%"-->
-<!--                           :color=changeColor()-->
-<!--                           outlined-->
-<!--                           :loading="loadingSave"-->
-<!--                           @click="submitCase"-->
-<!--                    >-->
-<!--                      <v-icon style="margin-right: 8px">mdi-cloud-upload</v-icon>-->
-<!--                      Submit the case-->
-<!--                    </v-btn>-->
-
-<!--                  </v-card-text>-->
-<!--                </v-card>-->
-<!--                <v-card>-->
-<!--                  <v-card-title>-->
-<!--                    <span class="text-h5">{{ this.selectedCase.title }}</span>-->
-<!--                  </v-card-title>-->
-<!--                  <v-card-text>-->
-<!--                    <v-container>-->
-<!--                      <v-text-field-->
-<!--                          light-->
-<!--                          label="Description"-->
-<!--                          v-model="selectedCase.description"-->
-<!--                          name="Description"-->
-<!--                          type="text"-->
-<!--                          :rules="rules.clearFieldValid"-->
-<!--                          :color=changeColor()-->
-<!--                          background-color=#EDF2F7-->
-<!--                          outlined-->
-<!--                          style="border-radius: 10px;"-->
-<!--                      />-->
-<!--                      <v-select v-model="selectedEmployee" id="emplList" :items="employees" label="Choose assignee"-->
-<!--                                :item-text="'name'" :item-value="'id'">-->
-<!--                        <option v-for="emp in employees" v-bind:key="emp.id" v-bind:value="emp.name">-->
-<!--                          {{ emp.name }}-->
-<!--                        </option>-->
-<!--                      </v-select>-->
-
-<!--                      <v-select v-model="newCaseState" id="newCaseState" :items="caseStates" label="Choose state">-->
-<!--                      </v-select>-->
 
 <!--                      <v-list class="overflow-y-auto" max-height="400" v-for="media in chosenCaseMedia"-->
 <!--                              :key="media.id">-->
@@ -302,25 +247,25 @@
 <!--                      </v-list>-->
 <!--                    </v-container>-->
 <!--                  </v-card-text>-->
-<!--                  <v-card-actions>-->
-<!--                    <v-spacer></v-spacer>-->
-<!--                    <v-btn-->
-<!--                        color="blue darken-1"-->
-<!--                        text-->
-<!--                        @click="dialog = false; object = null"-->
-<!--                    >-->
-<!--                      Close-->
-<!--                    </v-btn>-->
-<!--                    <v-btn-->
-<!--                        color="blue darken-1"-->
-<!--                        text-->
-<!--                        @click="updateCase(selectedCase)"-->
-<!--                    >-->
-<!--                      Save-->
-<!--                    </v-btn>-->
-<!--                  </v-card-actions>-->
-<!--                </v-card>-->
-<!--              </v-dialog>-->
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn
+                        color="blue darken-1"
+                        text
+                        @click="dialog = false; linkToMedia = false;"
+                    >
+                      Close
+                    </v-btn>
+                    <v-btn
+                        color="blue darken-1"
+                        text
+                        @click="updateCase(selectedCase)"
+                    >
+                      Save
+                    </v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
             </div>
           </v-list-item-group>
         </v-list>
@@ -364,6 +309,11 @@ export default {
     chosenCaseMedia: [],
     isFetchingCases: true,
     idFetchingMedia: true,
+    Media: [],
+    AllMedia: [],
+    linkToMedia: false,
+    mMedia: [],
+
 
     Case: [],
 
@@ -403,6 +353,24 @@ export default {
       })
     },
 
+    getListOfMediaProducts() {
+      let str = "/api/app/media/all"
+
+      axios.create(this.getHeader()
+      ).get(str)
+          .then(resp => {
+            console.log(resp.data)
+            for (let i = 0; i < resp.data.length; i++) {
+              this.Media.push('Media-' + resp.data[i].id + ":" + resp.data[i].title)
+              this.AllMedia.push(resp.data[i])
+              console.log(this.AllMedia[i])
+              this.isFetchingMedia = false
+            }
+          }).catch(err => {
+        if (this.doRefresh(err.response.status)) this.getListOfMediaProducts()
+      })
+    },
+
     getListOfCases() {
       let str = "/api/app/case/all"
 
@@ -421,7 +389,7 @@ export default {
       })
     },
 
-    getListOfMedia() {
+    getListOfMediaForCase() {
       let str = "/api/app/caseMedia/media"
 
       console.log("HMMM" + this.selectedCase)
@@ -490,13 +458,78 @@ export default {
 
     },
 
+    async createLinkToMedia(mmedia,mcase) {
+      if (this.$refs.form.validate()) {
+        this.loadingSave = true
+        let str = "/api/app/caseMedia/save"
+        //console.log(this.selectedCategory)
+        let data = {
+          mediaId: mmedia,
+          caseId: mcase.id
+        }
+        console.log("CaseMedia:"  + mcase)
+        axios.create(this.getHeader()
+        ).post(str, data)
+            .then(resp => {
+              console.log(resp.data)
+              //this.mediaEditorMode = false;
+            }).catch(err => {
+          if (this.doRefresh(err.response.status)) this.submit()
+        })
+        await new Promise(resolve => setTimeout(resolve, this.awaitTimer))
+        this.updateOverlay()
+
+        let data2 = {
+          dialog: false
+        }
+        this.$emit('updateParent', {data2})
+        this.loadingSave = false
+        this.getListOfMediaForCase()
+      }
+    },
+
+    async removeLinkWithMedia(media) {
+      if (this.$refs.form.validate()) {
+        this.loadingSave = true
+        let str = "/api/app/caseMedia/delete"
+        //console.log(this.selectedCategory)
+        let data = {
+          mediaId: media.id,
+          caseId: this.selectedCase.id
+        }
+        console.log("CaseMedia:"  + media.id + this.selectedCase.id)
+        axios.create(this.getHeader()
+        ).post(str, data)
+            .then(resp => {
+              console.log(resp.data)
+              //this.mediaEditorMode = false;
+            }).catch(err => {
+          if (this.doRefresh(err.response.status)) this.submit()
+        })
+        await new Promise(resolve => setTimeout(resolve, this.awaitTimer))
+        this.updateOverlay()
+
+        let data2 = {
+          dialog: false
+        }
+        this.$emit('updateParent', {data2})
+        this.loadingSave = false
+        this.getListOfCasesForMedia()
+      }
+    },
+
+    openLinkedMedia(media) {
+      this.$emit('switchSectionToMedia', 'MediaSection', media)
+    },
+
     openCase(object) {
       console.log("CLICK BUTTON WORKED")
       this.caseViewMode = true
       this.selectedCase = object
       this.object = object
       console.log("opening case" + object.id)
-      this.getListOfMedia()
+      this.getListOfMediaForCase()
+      this.getListOfMediaProducts()
     },
 
     updateElements(CaseList) {

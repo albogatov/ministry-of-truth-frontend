@@ -239,7 +239,7 @@
                     <v-btn
                         color="blue darken-1"
                         text
-                        @click="dialog = false"
+                        @click="dialog = false; linkToCase = false;"
                     >
                       Close
                     </v-btn>
@@ -312,6 +312,14 @@ export default {
     },
   }),
   methods: {
+
+    receiveRouteToObject(obj) {
+      // while(this.isFetchingCases)
+      //   console.log('loading')
+      this.selectedMedia = obj
+      this.dialog = true
+    },
+
     getCategories() {
       let str = "/api/app/category/all"
       axios.get(str, this.getHeader())
@@ -534,6 +542,10 @@ export default {
     this.getCategories()
     this.getListOfMediaProducts()
     this.getListOfCases()
+  },
+  mounted: function() {
+    console.log("YEEEEEEAAAA")
+    this.$emit("mounted");
   }
 }
 </script>

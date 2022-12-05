@@ -3,8 +3,8 @@
     <div v-show="false">
       <img src="../../assets/defaultMain.jpg" alt/>
     </div>
-    <CaseSection v-if="this.$parent.currentSection === 'CaseSection'"  ref="caseComponent" @mounted="caseSectionMounted" />
-    <MediaSection v-if="this.$parent.currentSection === 'MediaSection'" @switchSectionToCase="switchSectionToCase" ref="mediaComponent"/>
+    <CaseSection v-if="this.$parent.currentSection === 'CaseSection'"  @switchSectionToMedia="switchSectionToMedia" ref="caseComponent" @mounted="caseSectionMounted" />
+    <MediaSection v-if="this.$parent.currentSection === 'MediaSection'"  @switchSectionToCase="switchSectionToCase" @mounted="mediaSectionMounted" ref="mediaComponent"/>
     <v-img :src=getSrc()
            class="ml-auto mr-auto"
            height="850px"
@@ -32,6 +32,7 @@ export default {
   data: () => ({
     caseSectionReady: false,
     caseSectionPredefined: null,
+    mediaSectionPredefined: null,
     slotSize: 28,
     renderComponent: false,
     mapPath: '',
@@ -43,35 +44,23 @@ export default {
       if (this.caseSectionPredefined) {
         this.$refs.caseComponent.receiveRouteToObject(this.caseSectionPredefined)
       }
+      this.caseSectionPredefined = null
     },
     switchSectionToCase(e, obj) {
       this.caseSectionPredefined = obj
       this.$emit('switchSection', e)
-      // console.log(obj)
-      // while(!this.caseSectionReady) {
-      //   console.log("loading")
-      // }
-
     },
-    // getListOfKvartals() {
-    //   this.KvartalsList = new Array(28)
-    //   let str = "/api/app/quarter/map"
-    //   axios.create(this.getHeader()
-    //   ).get(str)
-    //       .then(resp => {
-    //         for (let i = 0; i < resp.data.length; i++) {
-    //           if (resp.data[i] != null) {
-    //             this.KvartalsList[i] = resp.data[i].name
-    //           } else this.KvartalsList[i] = null
-    //         }
-    //         this.renderComponent = true
-    //         this.$store.commit('clearAll')
-    //         this.$store.commit('updateKvartalsList', this.KvartalsList)
-    //       }).catch(err => {
-    //     this.renderComponent = false
-    //     if (this.doRefresh(err.response.status)) this.getListOfKvartals()
-    //   })
-    // },
+
+    mediaSectionMounted() {
+      if (this.mediaSectionPredefined) {
+        this.$refs.mediaComponent.receiveRouteToObject(this.mediaSectionPredefined)
+      }
+      this.mediaSectionPredefined = null
+    },
+    switchSectionToMedia(e, obj) {
+      this.mediaSectionPredefined = obj
+      this.$emit('switchSection', e)
+    },
 
     updateDialog() {
       this.renderComponent = false
