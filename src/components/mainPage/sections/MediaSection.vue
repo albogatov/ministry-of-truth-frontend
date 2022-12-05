@@ -115,74 +115,6 @@
                     Open Media
                   </v-btn>
                 </template>
-<!--                <v-card>-->
-<!--                  <v-card-text class="font-weight-medium" style="font-size: 15pt; " v-if="this.mediaEditorMode">-->
-
-<!--                    <v-text-->
-<!--                        light-->
-<!--                        label="Title"-->
-<!--                        v-model="this.selectedMedia.title"-->
-<!--                        background-color=#EDF2F7-->
-<!--                        outlined-->
-<!--                        style="border-radius: 10px;"-->
-<!--                    />-->
-
-<!--                    <v-text-field-->
-<!--                        light-->
-<!--                        label="Estimation"-->
-<!--                        v-model="this.selectedMedia.estimation"-->
-<!--                        name="Estimation"-->
-<!--                        type="number"-->
-<!--                        :rules="rules.clearFieldValid"-->
-<!--                        :color=changeColor()-->
-<!--                        background-color=#EDF2F7-->
-<!--                        outlined-->
-<!--                        style="border-radius: 10px;"-->
-<!--                    />-->
-
-<!--                    <v-select v-model="this.selectedMedia.mediaCategory.name" id="emplList" :items="categories" label="Choose category"-->
-<!--                              :item-text="'name'" :item-value="'id'">-->
-<!--                      <option v-for="cat in categories" v-bind:key="cat.id" v-bind:value="cat.name">-->
-<!--                        {{this.selectedMedia.mediaCategory.name}}-->
-<!--                      </option>-->
-<!--                    </v-select>-->
-
-<!--                    <v-select v-model="this.selectedMedia.status" value="this.selectedMedia.status" id="newCaseState" :items="mediaStates" label="Choose state">-->
-<!--                      <option v-for="st in mediaStates" v-bind:key="st.name" v-bind:value="st.name">-->
-<!--                        {{this.selectedMedia.status}}-->
-<!--                      </option>-->
-<!--                    </v-select>-->
-
-<!--                    <v-btn-->
-<!--                        color="primary"-->
-<!--                        dark-->
-<!--                        v-text="'Published by ' + publishers.find(pub => pub.id === selectedMedia.publisher).name"-->
-<!--                        @click="openPublisher(publishers.find(pub => pub.id === selectedMedia.publisher))"-->
-<!--                        width="80%"-->
-<!--                        height="5%"-->
-<!--                    >-->
-<!--                      Open Case-->
-<!--                    </v-btn>-->
-
-<!--&lt;!&ndash;                    <v-select v-model="selectedPublisher" id="publisherList" :items="publishers" label="Choose publisher"&ndash;&gt;-->
-<!--&lt;!&ndash;                              :item-text="'name'" :item-value="'id'">&ndash;&gt;-->
-<!--&lt;!&ndash;                      <option v-for="cat in publishers" v-bind:key="cat.id" v-bind:value="cat.name">&ndash;&gt;-->
-<!--&lt;!&ndash;                        {{ cat.name }}&ndash;&gt;-->
-<!--&lt;!&ndash;                      </option>&ndash;&gt;-->
-<!--&lt;!&ndash;                    </v-select>&ndash;&gt;-->
-
-<!--                    <v-btn style="margin-left: 25%; margin-bottom: 5%"-->
-<!--                           :color=changeColor()-->
-<!--                           outlined-->
-<!--                           :loading="loadingSave"-->
-<!--                           @click="submitMedia"-->
-<!--                    >-->
-<!--                      <v-icon style="margin-right: 8px">mdi-cloud-upload</v-icon>-->
-<!--                      Submit the media-->
-<!--                    </v-btn>-->
-
-<!--                  </v-card-text>-->
-<!--                </v-card>-->
                 <v-card>
                   <v-card-title>
                     <span class="text-h5">{{ this.selectedMedia.title }}</span>
@@ -201,15 +133,30 @@
                           outlined
                           style="border-radius: 10px;"
                       />
-                      <v-select v-model="selectedMedia.mediaCategory" id="categoryList" :items="categories" label="Choose category"
+                      <v-select v-model="selectedMedia.mediaCategory" id="categoryList" :items="categories"
+                                label="Choose category"
                                 :item-text="'name'" :item-value="'id'">
                         <option v-for="cat in categories" v-bind:key="cat.id" v-bind:value="cat.name">
                           {{ cat.name }}
                         </option>
                       </v-select>
 
-                      <v-select v-model="selectedMedia.status" id="newCaseState" :items="mediaStates" label="Choose state">
+                      <v-select v-model="selectedMedia.status" id="newCaseState" :items="mediaStates"
+                                label="Choose state">
                       </v-select>
+
+                      <v-btn
+                          color="primary"
+                          dark
+                          v-text="'Published by ' + selectedMediaPublisher.name"
+                          @click="openPublisher(selectedMediaPublisher)"
+                          width="80%"
+                          height="5%"
+                          v-if="!isFetchingPublishers"
+                      >
+                        Open Case
+                      </v-btn>
+
 
                       <v-list class="overflow-y-auto" max-height="400" v-for="cases in chosenMediaCase"
                               :key="cases.id">
@@ -245,7 +192,8 @@
                         Link to another case
                       </v-btn>
                       <v-select v-model="mcase" id="categoryList" :items="AllCases" label="Choose case"
-                                :item-text="'title'" :item-value="'id'" v-if="linkToCase" :rules="rules.clearFieldValid">
+                                :item-text="'title'" :item-value="'id'" v-if="linkToCase"
+                                :rules="rules.clearFieldValid">
                         <option v-for="mcase in AllCases" v-bind:key="mcase.id" v-bind:value="mcase.title">
                           {{ mcase.title }}
                         </option>
@@ -329,6 +277,7 @@ export default {
     mcase: [],
     selectedPublisher: [],
     publishers: [],
+    selectedMediaPublisher: null,
 
     Media: [],
 
@@ -400,7 +349,7 @@ export default {
               this.isFetchingCases = false
             }
           }).catch(err => {
-            console.log(err)
+        console.log(err)
         if (this.doRefresh(err.response.status)) this.getListOfCases()
       })
     },
@@ -432,12 +381,18 @@ export default {
               //this.Case.push('Case-' + resp.data[i].id + ":" + resp.data[i].title)
               this.publishers.push(resp.data[i])
               console.log(this.publishers[i])
-              this.isFetchingPublishers = false
+              //this.isFetchingPublishers = false
             }
           }).catch(err => {
         console.log(err)
         if (this.doRefresh(err.response.status)) this.getListOfPublishers()
       })
+    },
+
+    isStillFetchingPublishers() {
+      if(this.selectedMedia.publisher.name == null)
+        this.isFetchingPublishers = true;
+      else this.isFetchingPublishers = false;
     },
 
     async submitMedia() {
@@ -474,7 +429,7 @@ export default {
       }
     },
 
-    async createLinkToCase(mcase,media) {
+    async createLinkToCase(mcase, media) {
       if (this.$refs.form.validate()) {
         this.loadingSave = true
         let str = "/api/app/caseMedia/save"
@@ -483,7 +438,7 @@ export default {
           mediaId: media.id,
           caseId: mcase
         }
-        console.log("CaseMedia:"  + mcase)
+        console.log("CaseMedia:" + mcase)
         axios.create(this.getHeader()
         ).post(str, data)
             .then(resp => {
@@ -513,7 +468,7 @@ export default {
           mediaId: this.selectedMedia.id,
           caseId: mcase.id
         }
-        console.log("CaseMedia:"  + mcase.id + this.selectedMedia.id)
+        console.log("CaseMedia:" + mcase.id + this.selectedMedia.id)
         axios.create(this.getHeader()
         ).post(str, data)
             .then(resp => {
@@ -572,6 +527,8 @@ export default {
       this.getListOfCasesForMedia()
       console.log("Selected media")
       console.log(this.selectedMedia)
+      this.selectedMediaPublisher = object.publisher
+      this.isStillFetchingPublishers()
     },
 
     updateElements(CaseList) {
@@ -598,13 +555,14 @@ export default {
   },
   beforeMount() {
     //this.updateOverlay()
+    this.getListOfPublishers()
     this.getCategories()
     this.getListOfMediaProducts()
     this.getListOfCases()
   },
-  mounted: function() {
+  mounted: function () {
     console.log("YEEEEEEAAAA")
-    this.$emit("mounted");
+    this.$emit("mounted")
   }
 }
 </script>

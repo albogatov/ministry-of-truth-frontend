@@ -4,7 +4,9 @@
       <img src="../../assets/defaultMain.jpg" alt/>
     </div>
     <CaseSection v-if="this.$parent.currentSection === 'CaseSection'"  @switchSectionToMedia="switchSectionToMedia" ref="caseComponent" @mounted="caseSectionMounted" />
-    <MediaSection v-if="this.$parent.currentSection === 'MediaSection'"  @switchSectionToCase="switchSectionToCase" @mounted="mediaSectionMounted" ref="mediaComponent"/>
+    <MediaSection v-if="this.$parent.currentSection === 'MediaSection'" @switchSectionToPublisher="switchSectionToPublisher" @switchSectionToCase="switchSectionToCase" @mounted="mediaSectionMounted" ref="mediaComponent"/>
+    <PublisherSection v-if="this.$parent.currentSection === 'PublisherSection'" @switchSectionToMedia="switchSectionToMedia" @mounted="publisherSectionMounted" ref="publisherComponent"/>
+
     <v-img :src=getSrc()
            class="ml-auto mr-auto"
            height="850px"
@@ -23,16 +25,18 @@
 <script>
 import CaseSection from "@/components/mainPage/sections/CaseSection";
 import MediaSection from "@/components/mainPage/sections/MediaSection";
+import PublisherSection from "@/components/mainPage/sections/PublisherSection";
 // import axios from "axios";
 
 export default {
   name: "MainComponent",
-  components: {CaseSection, MediaSection},
+  components: {CaseSection, MediaSection, PublisherSection},
 
   data: () => ({
     caseSectionReady: false,
     caseSectionPredefined: null,
     mediaSectionPredefined: null,
+    publisherSectionPredefined: null,
     slotSize: 28,
     renderComponent: false,
     mapPath: '',
@@ -59,6 +63,18 @@ export default {
     },
     switchSectionToMedia(e, obj) {
       this.mediaSectionPredefined = obj
+      this.$emit('switchSection', e)
+    },
+
+    publisherSectionMounted() {
+      console.log("publisher is mounted")
+      if (this.publisherSectionPredefined) {
+        this.$refs.publisherComponent.receiveRouteToObject(this.publisherSectionPredefined)
+      }
+      this.publisherSectionPredefined = null
+    },
+    switchSectionToPublisher(e, obj) {
+      this.publisherSectionPredefined = obj
       this.$emit('switchSection', e)
     },
 
