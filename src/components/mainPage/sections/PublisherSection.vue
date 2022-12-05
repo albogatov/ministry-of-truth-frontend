@@ -6,22 +6,22 @@
       >
         <v-card-text class="font-weight-medium" style="font-size: 15pt; ">
           <div style="color: black; text-align: center; margin-bottom: 5%; font-size: 25px; line-height: 1">
-            <br>Cases of the Ministry
+            <br>Registered Publishers
           </div>
         </v-card-text>
 
         <v-btn style="margin-left: 25%; margin-bottom: 5%"
                :color=changeColor()
                outlined
-               @click="caseEditorMode = true"
+               @click="publisherEditorMode = true"
         >
           <v-icon style="margin-right: 8px">mdi-cloud-upload</v-icon>
-          Create new case
+          Register publisher
         </v-btn>
 
-        <v-card-text class="font-weight-medium" style="font-size: 15pt; " v-if="this.caseEditorMode">
+        <v-card-text class="font-weight-medium" style="font-size: 15pt; " v-if="this.publisherEditorMode">
           <div style="margin-top: 5px; margin-bottom: 20px; color: black; font-weight: lighter">
-            Enter data for the new case
+            Enter data for the publisher
           </div>
 
           <v-text-field
@@ -108,53 +108,53 @@
                     Open Case
                   </v-btn>
                 </template>
-<!--                <v-card>-->
-<!--                  <v-card-text class="font-weight-medium" style="font-size: 15pt; " v-if="this.caseEditorMode">-->
+                <v-card>
+                  <v-card-text class="font-weight-medium" style="font-size: 15pt; " v-if="this.publisherEditorMode">
 
-<!--                    <v-text-->
-<!--                        light-->
-<!--                        label="Title"-->
-<!--                        v-model="object.title"-->
-<!--                        background-color=#EDF2F7-->
-<!--                        outlined-->
-<!--                        style="border-radius: 10px;"-->
-<!--                    />-->
+                    <v-text
+                        light
+                        label="Title"
+                        v-model="object.title"
+                        background-color=#EDF2F7
+                        outlined
+                        style="border-radius: 10px;"
+                    />
 
-<!--                    <v-text-field-->
-<!--                        light-->
-<!--                        label="Description"-->
-<!--                        v-model="description"-->
-<!--                        name="Description"-->
-<!--                        type="text"-->
-<!--                        :rules="rules.clearFieldValid"-->
-<!--                        :color=changeColor()-->
-<!--                        background-color=#EDF2F7-->
-<!--                        outlined-->
-<!--                        style="border-radius: 10px;"-->
-<!--                    />-->
+                    <v-text-field
+                        light
+                        label="Description"
+                        v-model="description"
+                        name="Description"
+                        type="text"
+                        :rules="rules.clearFieldValid"
+                        :color=changeColor()
+                        background-color=#EDF2F7
+                        outlined
+                        style="border-radius: 10px;"
+                    />
 
-<!--                    <v-select v-model="selectedEmployee" id="emplList" :items="employees" label="Choose assignee"-->
-<!--                              :item-text="'name'" :item-value="'id'">-->
-<!--                      <option v-for="emp in employees" v-bind:key="emp.id" v-bind:value="emp.name">-->
-<!--                        {{ emp.name }}-->
-<!--                      </option>-->
-<!--                    </v-select>-->
+                    <v-select v-model="selectedEmployee" id="emplList" :items="employees" label="Choose assignee"
+                              :item-text="'name'" :item-value="'id'">
+                      <option v-for="emp in employees" v-bind:key="emp.id" v-bind:value="emp.name">
+                        {{ emp.name }}
+                      </option>
+                    </v-select>
 
-<!--                    <v-select v-model="newCaseState" id="newCaseState" :items="caseStates" label="Choose state">-->
-<!--                    </v-select>-->
+                    <v-select v-model="newCaseState" id="newCaseState" :items="caseStates" label="Choose state">
+                    </v-select>
 
-<!--                    <v-btn style="margin-left: 25%; margin-bottom: 5%"-->
-<!--                           :color=changeColor()-->
-<!--                           outlined-->
-<!--                           :loading="loadingSave"-->
-<!--                           @click="submitCase"-->
-<!--                    >-->
-<!--                      <v-icon style="margin-right: 8px">mdi-cloud-upload</v-icon>-->
-<!--                      Submit the case-->
-<!--                    </v-btn>-->
+                    <v-btn style="margin-left: 25%; margin-bottom: 5%"
+                           :color=changeColor()
+                           outlined
+                           :loading="loadingSave"
+                           @click="submitCase"
+                    >
+                      <v-icon style="margin-right: 8px">mdi-cloud-upload</v-icon>
+                      Submit the case
+                    </v-btn>
 
-<!--                  </v-card-text>-->
-<!--                </v-card>-->
+                  </v-card-text>
+                </v-card>
                 <v-card>
                   <v-card-title>
                     <span class="text-h5">{{ this.selectedCase.title }}</span>
@@ -173,14 +173,14 @@
                           outlined
                           style="border-radius: 10px;"
                       />
-                      <v-select v-model="selectedCase.assignee" id="emplList" :items="employees" label="Choose assignee"
+                      <v-select v-model="selectedEmployee" id="emplList" :items="employees" label="Choose assignee"
                                 :item-text="'name'" :item-value="'id'">
                         <option v-for="emp in employees" v-bind:key="emp.id" v-bind:value="emp.name">
                           {{ emp.name }}
                         </option>
                       </v-select>
 
-                      <v-select v-model="selectedCase.state" id="newCaseState" :items="caseStates" label="Choose state">
+                      <v-select v-model="newCaseState" id="newCaseState" :items="caseStates" label="Choose state">
                       </v-select>
 
                       <v-list class="overflow-y-auto" max-height="400" v-for="media in chosenCaseMedia"
@@ -235,18 +235,18 @@
                     </v-container>
                   </v-card-text>
 
-<!--                      <v-list class="overflow-y-auto" max-height="400" v-for="media in chosenCaseMedia"-->
-<!--                              :key="media.id">-->
-<!--                        <v-list-tile-content>-->
-<!--                          <v-list-tile-title v-text="media.title"></v-list-tile-title>-->
-<!--                        </v-list-tile-content>-->
+                  <!--                      <v-list class="overflow-y-auto" max-height="400" v-for="media in chosenCaseMedia"-->
+                  <!--                              :key="media.id">-->
+                  <!--                        <v-list-tile-content>-->
+                  <!--                          <v-list-tile-title v-text="media.title"></v-list-tile-title>-->
+                  <!--                        </v-list-tile-content>-->
 
-<!--                        <v-btn icon>-->
-<!--                          <v-icon>edit</v-icon>-->
-<!--                        </v-btn>-->
-<!--                      </v-list>-->
-<!--                    </v-container>-->
-<!--                  </v-card-text>-->
+                  <!--                        <v-btn icon>-->
+                  <!--                          <v-icon>edit</v-icon>-->
+                  <!--                        </v-btn>-->
+                  <!--                      </v-list>-->
+                  <!--                    </v-container>-->
+                  <!--                  </v-card-text>-->
                   <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn
@@ -292,7 +292,7 @@ export default {
     selectedEmployee: "",
     loadingRemove: false,
     loadingSave: false,
-    caseEditorMode: false,
+    publisherEditorMode: false,
     caseViewMode: false,
     newCaseState: 'Submitted',
     absolute: true,
@@ -421,7 +421,7 @@ export default {
         ).post(str, data)
             .then(resp => {
               console.log(resp.data)
-              this.caseEditorMode = false;
+              this.publisherEditorMode = false;
             }).catch(err => {
           if (this.doRefresh(err.response.status)) this.submit()
         })
@@ -438,23 +438,23 @@ export default {
 
     async updateCase(data) {
 
-        this.loadingSave = true
-        let str = "/api/app/case/save"
-        console.log(this.selectedEmployee)
-        console.log("We sent to save:" + data)
-        axios.create(this.getHeader()
-        ).post(str, data)
-            .then(resp => {
-              console.log("Server responded:" + resp.data)
-            }).catch(err => {
-          if (this.doRefresh(err.response.status)) this.submit()
-        })
-        await new Promise(resolve => setTimeout(resolve, this.awaitTimer))
-        this.updateOverlay()
+      this.loadingSave = true
+      let str = "/api/app/case/save"
+      console.log(this.selectedEmployee)
+      console.log("We sent to save:" + data)
+      axios.create(this.getHeader()
+      ).post(str, data)
+          .then(resp => {
+            console.log("Server responded:" + resp.data)
+          }).catch(err => {
+        if (this.doRefresh(err.response.status)) this.submit()
+      })
+      await new Promise(resolve => setTimeout(resolve, this.awaitTimer))
+      this.updateOverlay()
 
-        this.dialog = false
-        //this.$emit('updateParent', {data2})
-        this.loadingSave = false
+      this.dialog = false
+      //this.$emit('updateParent', {data2})
+      this.loadingSave = false
 
     },
 
@@ -528,7 +528,6 @@ export default {
       this.selectedCase = object
       this.object = object
       console.log("opening case" + object.id)
-      console.log(this.selectedCase)
       this.getListOfMediaForCase()
       this.getListOfMediaProducts()
     },
