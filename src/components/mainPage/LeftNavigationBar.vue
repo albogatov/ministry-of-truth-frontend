@@ -70,6 +70,11 @@
                        class="navigationButton" outlined>
                   See Guidelines
                 </v-btn>
+
+                <v-btn @click="setSection('DeviceSection')" v-bind="attrs" v-on="on" width="100%"
+                       class="navigationButton" outlined>
+                  See Device
+                </v-btn>
               </div>
 
             </template>

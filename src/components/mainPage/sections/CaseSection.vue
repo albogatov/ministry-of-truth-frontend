@@ -554,7 +554,7 @@ export default {
         }
         this.$emit('updateParent', {data2})
         this.loadingSave = false
-        this.getListOfCasesForMedia()
+        this.getListOfCasesForDevice()
       }
     },
 
