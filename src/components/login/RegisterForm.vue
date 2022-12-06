@@ -62,7 +62,6 @@
             />
 
             <v-checkbox
-                :rules="rules.clearFieldValid"
                 v-model="married"
                 label="Married"
                 :color="changeColor()"

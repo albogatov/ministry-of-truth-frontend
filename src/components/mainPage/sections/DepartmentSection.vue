@@ -41,19 +41,19 @@
           <v-select v-model="newDepartmentState" id="newDepartmentState" :items="departmentStates" label="Choose state">
           </v-select>
 
-          <!--          <v-select v-model="selectedDesignation" id="designationList" :items="designations" label="Choose designation"-->
-          <!--                    :item-text="'name'" :item-value="'id'">-->
-          <!--            <option v-for="d in designations" v-bind:key="d.id" v-bind:value="d.name">-->
-          <!--              {{ d.name }}-->
-          <!--            </option>-->
-          <!--          </v-select>-->
+                    <v-select v-model="selectedDesignation" id="designationList" :items="designations" label="Choose designation"
+                              :item-text="'name'" :item-value="'id'">
+                      <option v-for="d in designations" v-bind:key="d.id" v-bind:value="d.name">
+                        {{ d.name }}
+                      </option>
+                    </v-select>
 
-          <!--          <v-select v-model="selectedCategory" id="categoryList" :items="categories" label="Choose media category"-->
-          <!--                    :item-text="'name'" :item-value="'id'">-->
-          <!--            <option v-for="cat in categories" v-bind:key="cat.id" v-bind:value="cat.name">-->
-          <!--              {{ cat.name }}-->
-          <!--            </option>-->
-          <!--          </v-select>-->
+                    <v-select v-model="selectedCategory" id="categoryList" :items="categories" label="Choose media category"
+                              :item-text="'name'" :item-value="'id'">
+                      <option v-for="cat in categories" v-bind:key="cat.id" v-bind:value="cat.name">
+                        {{ cat.name }}
+                      </option>
+                    </v-select>
 
           <v-date-picker
               v-model="newDepartmentFoundationDate"
@@ -309,7 +309,7 @@ export default {
               //   "id": resp.data[i].id,
               //   "name": resp.data[i].name
               // }
-              this.categories.push(resp.data[i])
+              this.designations.push(resp.data[i])
             }
 
           }).catch(err => {

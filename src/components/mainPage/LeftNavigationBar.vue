@@ -65,6 +65,11 @@
                        class="navigationButton" outlined>
                   See Employees
                 </v-btn>
+
+                <v-btn @click="setSection('GuidelineSection')" v-bind="attrs" v-on="on" width="100%"
+                       class="navigationButton" outlined>
+                  See Guidelines
+                </v-btn>
               </div>
 
             </template>
