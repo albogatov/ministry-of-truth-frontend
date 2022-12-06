@@ -7,6 +7,8 @@
     <MediaSection v-if="this.$parent.currentSection === 'MediaSection'" @switchSectionToPublisher="switchSectionToPublisher" @switchSectionToCase="switchSectionToCase" @mounted="mediaSectionMounted" ref="mediaComponent"/>
     <PublisherSection v-if="this.$parent.currentSection === 'PublisherSection'" @switchSectionToMedia="switchSectionToMedia" @mounted="publisherSectionMounted" ref="publisherComponent"/>
     <DepartmentSection v-if="this.$parent.currentSection === 'DepartmentSection'" @switchSectionToMedia="switchSectionToMedia" @mounted="publisherSectionMounted" ref="publisherComponent"/>
+    <EmployeeSection v-if="this.$parent.currentSection === 'EmployeeSection'" ref="employeeComponent"/>
+
 
     <v-img :src=getSrc()
            class="ml-auto mr-auto"
@@ -28,11 +30,12 @@ import CaseSection from "@/components/mainPage/sections/CaseSection";
 import MediaSection from "@/components/mainPage/sections/MediaSection";
 import PublisherSection from "@/components/mainPage/sections/PublisherSection";
 import DepartmentSection from "@/components/mainPage/sections/DepartmentSection";
+import EmployeeSection from "@/components/mainPage/sections/EmployeeSection";
 // import axios from "axios";
 
 export default {
   name: "MainComponent",
-  components: {DepartmentSection, CaseSection, MediaSection, PublisherSection},
+  components: {DepartmentSection, CaseSection, MediaSection, PublisherSection, EmployeeSection},
 
   data: () => ({
     caseSectionReady: false,

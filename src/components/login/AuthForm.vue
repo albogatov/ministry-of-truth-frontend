@@ -155,6 +155,7 @@ export default {
             await new Promise(resolve => setTimeout(resolve, 500))
             this.error = true
           }
+          console.log(err.message)
         })
       }
     },

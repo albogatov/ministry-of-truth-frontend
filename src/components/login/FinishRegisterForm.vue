@@ -121,9 +121,10 @@ export default {
         this.loadingRegister = true
         let data = {
           login: this.login,
-          password: this.password
+          password: this.password,
+          emplId: localStorage.lastCreatedEmployee
         }
-        console.log(data.password, data.username)
+        console.log(data.login)
         axios.create({
           baseURL: this.hostname
         }).post('/api/auth/register', data)
@@ -140,6 +141,7 @@ export default {
             await new Promise(resolve => setTimeout(resolve, 500))
             this.error = true
           }
+          console.log(err)
         })
       }
     },

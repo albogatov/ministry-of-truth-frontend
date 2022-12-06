@@ -2,11 +2,11 @@
   <v-card class="elevation-0" style="margin-top: 15%; margin-left: 25%">
     <v-row>
       <v-col cols="1  2" md="8">
-        <v-card-text class="mt-12">
+        <v-card-text class="mt-12" v-if="!this.employeeSet">
           <h1
               class="text-center display-2"
               style="color: black; font-weight: bold; margin-bottom: 40px"
-          >Create Account</h1>
+          >Create Employee Profile</h1>
 
           <v-form
               style="margin-bottom: 20px"
@@ -49,32 +49,124 @@
                 style="border-radius: 10px"
             />
 
-<!--            <div class="font-center" style="font-size: 14pt; margin-bottom: 10px; text-align: left">-->
-<!--              Password-->
-<!--            </div>-->
+            <v-textarea
+                :rules="rules.clearFieldValid"
+                light
+                label="Address"
+                v-model="address"
+                name="Address"
+                :color=changeColor()
+                background-color=#EDF2F7
+                outlined
+                style="border-radius: 10px;"
+            />
 
-<!--            <v-text-field-->
-<!--                :rules="rules.passwordValid"-->
-<!--                :append-icon="eyeFlag ? 'mdi-eye' : 'mdi-eye-off'"-->
-<!--                :type="eyeFlag ? 'text' : 'password'"-->
-<!--                hint="At least 8 symbols"-->
-<!--                @click:append="eyeFlag = !eyeFlag"-->
-<!--                id="password"-->
-<!--                label="Enter password"-->
-<!--                color="black"-->
-<!--                v-model="password"-->
-<!--                auto-grow-->
-<!--                outlined-->
-<!--                rows="1"-->
-<!--                style="border-radius: 10px"-->
-<!--            />-->
+            <v-checkbox
+                :rules="rules.clearFieldValid"
+                v-model="married"
+                label="Married"
+                :color="changeColor()"
+                hide-details
+            ></v-checkbox>
+
+            <v-text-field
+                :rules="rules.clearFieldValid"
+                light
+                label="Number of children"
+                v-model="numberOfChildren"
+                name="Number of children"
+                :color=changeColor()
+                type="number"
+                background-color=#EDF2F7
+                outlined
+                style="border-radius: 10px;"
+            >
+
+            </v-text-field>
+
           </v-form>
 
           <v-row style="margin: auto">
-            <v-btn x-large style="box-shadow: none !important; border-radius: 10px" :color=changeColor() width="100%" dark
+            <v-btn x-large style="box-shadow: none !important; border-radius: 10px" :color=changeColor() width="100%"
+                   dark
                    :loading="loadingRegister"
                    @click="submit()">
               Continue Registration
+            </v-btn>
+          </v-row>
+
+          <v-alert v-if="error" style="margin-top: 30px"
+                   colored-border
+                   type="error" outlined
+                   elevation="0"
+          >
+            User with this name already exists
+          </v-alert>
+
+          <v-alert v-if="errorNetwork" style="margin-top: 30px"
+                   colored-border
+                   type="error" outlined
+                   elevation="0"
+          >
+            The server is currently under attack, go defend it!
+          </v-alert>
+        </v-card-text>
+        <v-card-text class="mt-12" v-if="this.employeeSet">
+          <h1
+              class="text-center display-2"
+              style="color: black; font-weight: bold; margin-bottom: 40px"
+          >Create Account</h1>
+
+          <v-form
+              style="margin-bottom: 20px"
+              ref="form"
+              lazy-validation>
+
+            <div class="font-center" style="font-size: 14pt; margin-bottom: 10px; text-align: left">
+              Login
+            </div>
+
+            <v-textarea
+                :rules="rules.clearFieldValid"
+                label="Enter Login"
+                name="Login"
+                type="text"
+                color="black"
+                v-model="login"
+                auto-grow
+                outlined
+                rows="1"
+                row-height="15"
+                style="border-radius: 10px"
+            />
+
+            <div class="font-center" style="font-size: 14pt; margin-bottom: 10px; text-align: left">
+              Пароль
+            </div>
+
+            <v-text-field
+                :rules="rules.passwordValid"
+                :append-icon="eyeFlag ? 'mdi-eye' : 'mdi-eye-off'"
+                :type="eyeFlag ? 'text' : 'password'"
+                hint="At least 8 symbols"
+                @click:append="eyeFlag = !eyeFlag"
+                id="password"
+                label="Enter password"
+                color="black"
+                v-model="password"
+                auto-grow
+                outlined
+                rows="1"
+                style="border-radius: 10px"
+            />
+          </v-form>
+
+          <v-row style="margin: auto">
+            <v-btn x-large style="box-shadow: none !important; border-radius: 10px" :color=changeColor() width="100%"
+                   dark
+                   :loading="loadingRegister"
+                   @click="submitRegister()">
+              Register and go back to login
             </v-btn>
           </v-row>
 
@@ -121,6 +213,13 @@ export default {
     loadingRegister: false,
     error: '',
     errorNetwork: '',
+    address: '',
+    numberOfChildren: '',
+    married: false,
+    employeeSet: false,
+    login: '',
+    password: '',
+
 
     rules: {
       clearFieldValid: [
@@ -136,20 +235,36 @@ export default {
   methods: {
     submit() {
       if (this.$refs.form.validate()) {
-        this.loadingRegister = true
+        //this.loadingRegister = true
         let data = {
           name: this.name,
-          age: this.age
+          age: this.age,
+          address: this.address,
+          married: this.married,
+          childrenAmount: this.numberOfChildren
         }
-        console.log(data.name, data.age)
+        this.employeeSet = data
+      }
+    },
+    submitRegister() {
+      if (this.$refs.form.validate()) {
+        this.loadingRegister = true
+        let profile = {
+          login: this.login,
+          password: this.password
+        }
+        let data = {
+          employeeDto: this.employeeSet,
+          employeeProfileDto: profile
+        }
+        console.log(data.login)
         axios.create({
           baseURL: this.hostname
-        }).post('/api/auth/startRegister', data)
+        }).post('/api/auth/register', data)
             .then(async resp => {
               console.log(resp)
-              localStorage.userAccessLevel = resp.data.userAccessLevel
               await new Promise(resolve => setTimeout(resolve, 500))
-              await router.push({path: '/finishRegister'})
+              await router.push({path: '/'})
               this.loadingRegister = false
             }).catch(async err => {
           this.loadingRegister = false
@@ -159,8 +274,40 @@ export default {
             await new Promise(resolve => setTimeout(resolve, 500))
             this.error = true
           }
+          console.log(err)
         })
       }
+      // submit() {
+      //   if (this.$refs.form.validate()) {
+      //     this.loadingRegister = true
+      //     let data = {
+      //       name: this.name,
+      //       age: this.age,
+      //       address: this.address,
+      //       married: this.married,
+      //       childrenAmount: this.numberOfChildren
+      //     }
+      //     console.log(data.name, data.age)
+      //     axios.create({
+      //       baseURL: this.hostname
+      //     }).post('/api/auth/startRegister', data)
+      //         .then(async resp => {
+      //           console.log(resp)
+      //           localStorage.userAccessLevel = resp.data.userAccessLevel
+      //           localStorage.lastCreatedEmployee = resp.data.id
+      //           await new Promise(resolve => setTimeout(resolve, 500))
+      //           await router.push({path: '/finishRegister'})
+      //           this.loadingRegister = false
+      //         }).catch(async err => {
+      //       this.loadingRegister = false
+      //       if (err.message === 'Network Error') {
+      //         this.errorNetwork = true
+      //       } else {
+      //         await new Promise(resolve => setTimeout(resolve, 500))
+      //         this.error = true
+      //       }
+      //     })
+      //   }
     },
 
     changeColor() {
