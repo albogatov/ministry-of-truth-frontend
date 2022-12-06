@@ -55,6 +55,11 @@
                        class="navigationButton" outlined>
                   See Publishers
                 </v-btn>
+
+                <v-btn @click="setSection('DepartmentSection')" v-bind="attrs" v-on="on" width="100%"
+                       class="navigationButton" outlined>
+                  See Departments
+                </v-btn>
               </div>
 
             </template>
