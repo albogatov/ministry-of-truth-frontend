@@ -18,11 +18,11 @@
            height="850px"
            style="border-radius: 10px" v-if="this.$parent.currentSection === ''"
     >
-      <v-btn disabled v-if="!renderComponent" height="100px" plain
-             style="margin-top: 22%; color: black; font-size: 40px; font-weight: bold; text-align: center; margin-left: 23%"
-      >
-        <pre>Server is currently under attack</pre>
-      </v-btn>
+<!--      <v-btn disabled v-if="!renderComponent" height="100px" plain-->
+<!--             style="margin-top: 22%; color: black; font-size: 40px; font-weight: bold; text-align: center; margin-left: 23%"-->
+<!--      >-->
+<!--        <pre>Server is currently under attack</pre>-->
+<!--      </v-btn>-->
 
     </v-img>
   </v-container>
