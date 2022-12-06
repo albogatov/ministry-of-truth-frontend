@@ -90,6 +90,20 @@
 
               color="primary"
           >
+            <v-list v-for="object in AllMedia" :key="object.id">
+              <v-list-tile-content>
+                <v-btn
+                    color="primary"
+                    dark
+                    v-text="'Media-' + object.id + ': ' + object.title"
+                    @click="openMedia(object)"
+                    width="100%"
+                    height="5%"
+                >
+                  Open Case
+                </v-btn>
+              </v-list-tile-content>
+            </v-list>
 
             <div>
               <v-dialog
@@ -97,24 +111,7 @@
                   persistent
                   max-width="600px" v-if="!this.isFetchingMedia"
               >
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn
-                      color="primary"
-                      dark
-                      v-bind="attrs"
-                      v-on="on"
-                      v-for="(mediaCurrent,id) in AllMedia"
-                      :key="id" :value="mediaCurrent.title"
-                      v-text="'Media-' + mediaCurrent.id + ': ' + mediaCurrent.title"
-                      id="hiddenButtonDialog"
-                      ref="hiddenButtonDialog"
-                      @click="openMedia(mediaCurrent)"
-                      width="100%"
-                      height="5%"
-                  >
-                    Open Media
-                  </v-btn>
-                </template>
+
                 <v-card>
                   <v-card-title>
                     <span class="text-h5">{{ this.selectedMedia.title }}</span>
@@ -133,7 +130,7 @@
                           outlined
                           style="border-radius: 10px;"
                       />
-                      <v-select v-model="selectedMedia.mediaCategory" id="categoryList" :items="categories"
+                      <v-select :readonly="true" v-model="selectedMedia.mediaCategoryId" id="categoryList" :items="categories"
                                 label="Choose category"
                                 :item-text="'name'" :item-value="'id'">
                         <option v-for="cat in categories" v-bind:key="cat.id" v-bind:value="cat.name">
@@ -324,6 +321,7 @@ export default {
       ).get(str)
           .then(resp => {
             console.log(resp.data)
+            this.AllMedia = []
             for (let i = 0; i < resp.data.length; i++) {
               this.Media.push('Media-' + resp.data[i].id + ":" + resp.data[i].title)
               this.AllMedia.push(resp.data[i])
@@ -529,6 +527,7 @@ export default {
       console.log(this.selectedMedia)
       this.selectedMediaPublisher = object.publisher
       this.isStillFetchingPublishers()
+      this.dialog = true
     },
 
     updateElements(CaseList) {

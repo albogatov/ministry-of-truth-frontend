@@ -76,6 +76,12 @@
               style="border-radius: 10px;"
           />
 
+          <v-date-picker
+              label="Foundation date"
+              v-model="foundationDate"
+              class="mt-4"
+          ></v-date-picker>
+
           <v-btn style="margin-left: 25%; margin-bottom: 5%"
                  :color=changeColor()
                  outlined
@@ -100,30 +106,27 @@
               color="primary"
           >
 
+            <v-list v-for="object in AllPublishers" :key="object.id">
+              <v-list-tile-content>
+                <v-btn
+                    color="primary"
+                    dark
+                    v-text="'Publisher-' + object.id + ': ' + object.name"
+                    @click="openPublisher(object)"
+                    width="100%"
+                    height="5%"
+                >
+                  Open Case
+                </v-btn>
+              </v-list-tile-content>
+            </v-list>
             <div>
               <v-dialog
                   v-model="dialog"
                   persistent
                   max-width="600px" v-if="!this.isFetchingPublishers"
               >
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn
-                      color="primary"
-                      dark
-                      v-bind="attrs"
-                      v-on="on"
-                      v-for="(object,id) in AllPublishers"
-                      :key="id" :value="object.name"
-                      v-text="'Publisher-' + object.id + ': ' + object.name"
-                      id="hiddenButtonDialog"
-                      ref="hiddenButtonDialog"
-                      @click="openPublisher(object)"
-                      width="100%"
-                      height="5%"
-                  >
-                    Open Case
-                  </v-btn>
-                </template>
+
                 <v-card>
                   <v-card-title>
                     <span class="text-h5">{{ this.selectedPublisher.title }}</span>
@@ -146,7 +149,7 @@
                       <v-text-field
                           light
                           label="Number of employees"
-                          v-model="selectedPublisher.numberOfEmployees"
+                          v-model="selectedPublisher.employeesCount"
                           name="NumberOfEmployees"
                           type="number"
                           :rules="rules.clearFieldValid"
@@ -280,6 +283,7 @@ export default {
     mMedia: [],
     registrationCode: '',
     representative: '',
+    foundationDate: '',
 
 
     Case: [],
@@ -327,6 +331,7 @@ export default {
       ).get(str)
           .then(resp => {
             console.log(resp.data)
+            this.AllPublishers = []
             for (let i = 0; i < resp.data.length; i++) {
               //this.Case.push('Case-' + resp.data[i].id + ":" + resp.data[i].title)
               this.AllPublishers.push(resp.data[i])
@@ -361,10 +366,11 @@ export default {
         let str = "/api/app/publisher/save"
         console.log(this.selectedEmployee)
         let data = {
-          assigneeId: this.selectedEmployee,
-          title: this.publisherName,
-          description: this.numberOfEmployees,
-          state: this.newCaseState
+          name: this.publisherName,
+          foundationDate: this.foundationDate,
+          employeesCount: this.numberOfEmployees,
+          registrationCode: this.registrationCode,
+          representative: this.representative
         }
         console.log(data)
         axios.create(this.getHeader()
@@ -420,6 +426,7 @@ export default {
       console.log("opening case" + object.id)
       this.getListOfMediaForPublisher()
       //this.getListOfMediaProducts()
+      this.dialog = true
     },
 
     updateElements(CaseList) {

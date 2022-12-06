@@ -19,7 +19,8 @@
           Register department
         </v-btn>
 
-        <v-card-text class="font-weight-medium" style="font-size: 15pt; " v-if="this.departmentEditorMode && !this.isFetchingDepartments">
+        <v-card-text class="font-weight-medium" style="font-size: 15pt; "
+                     v-if="this.departmentEditorMode && !this.isFetchingDepartments">
           <div style="margin-top: 5px; margin-bottom: 20px; color: black; font-weight: lighter">
             Enter data for the department
           </div>
@@ -40,19 +41,19 @@
           <v-select v-model="newDepartmentState" id="newDepartmentState" :items="departmentStates" label="Choose state">
           </v-select>
 
-<!--          <v-select v-model="selectedDesignation" id="designationList" :items="designations" label="Choose designation"-->
-<!--                    :item-text="'name'" :item-value="'id'">-->
-<!--            <option v-for="d in designations" v-bind:key="d.id" v-bind:value="d.name">-->
-<!--              {{ d.name }}-->
-<!--            </option>-->
-<!--          </v-select>-->
+          <!--          <v-select v-model="selectedDesignation" id="designationList" :items="designations" label="Choose designation"-->
+          <!--                    :item-text="'name'" :item-value="'id'">-->
+          <!--            <option v-for="d in designations" v-bind:key="d.id" v-bind:value="d.name">-->
+          <!--              {{ d.name }}-->
+          <!--            </option>-->
+          <!--          </v-select>-->
 
-<!--          <v-select v-model="selectedCategory" id="categoryList" :items="categories" label="Choose media category"-->
-<!--                    :item-text="'name'" :item-value="'id'">-->
-<!--            <option v-for="cat in categories" v-bind:key="cat.id" v-bind:value="cat.name">-->
-<!--              {{ cat.name }}-->
-<!--            </option>-->
-<!--          </v-select>-->
+          <!--          <v-select v-model="selectedCategory" id="categoryList" :items="categories" label="Choose media category"-->
+          <!--                    :item-text="'name'" :item-value="'id'">-->
+          <!--            <option v-for="cat in categories" v-bind:key="cat.id" v-bind:value="cat.name">-->
+          <!--              {{ cat.name }}-->
+          <!--            </option>-->
+          <!--          </v-select>-->
 
           <v-date-picker
               v-model="newDepartmentFoundationDate"
@@ -84,29 +85,25 @@
           >
 
             <div v-if="this.AllDepartments.length > 0">
-              <v-dialog
-                  v-model="dialog"
-                  persistent
-                  max-width="600px" v-if="!this.isFetchingDepartments"
-              >
-                <template v-slot:activator="{ on, attrs }">
+              <v-list v-for="object in AllDepartments" :key="object.id">
+                <v-list-tile-content>
                   <v-btn
                       color="primary"
                       dark
-                      v-bind="attrs"
-                      v-on="on"
-                      v-for="(object,id) in AllDepartments"
-                      :key="id" :value="object.name"
                       v-text="'Department-' + object.id + ': ' + object.name"
-                      id="hiddenButtonDialog"
-                      ref="hiddenButtonDialog"
                       @click="openDepartment(object)"
                       width="100%"
                       height="5%"
                   >
                     Open Case
                   </v-btn>
-                </template>
+                </v-list-tile-content>
+              </v-list>
+              <v-dialog
+                  v-model="dialog"
+                  persistent
+                  max-width="600px" v-if="!this.isFetchingDepartments"
+              >
                 <v-card v-if="!this.isFetchingDepartments">
                   <v-card-title>
                     <span class="text-h5">{{ this.selectedDepartment.name }}</span>
@@ -124,7 +121,8 @@
                           style="border-radius: 10px;"
                       />
 
-                      <v-select v-model="selectedDepartment.status" id="newDepartmentState" :items="departmentStates" label="Choose state">
+                      <v-select v-model="selectedDepartment.status" id="newDepartmentState" :items="departmentStates"
+                                label="Choose state">
                       </v-select>
 
                       <v-text
@@ -137,15 +135,15 @@
                           outlined
                           style="border-radius: 10px;"
                       >
-                        {{selectedDepDesignationValue}}
+                        {{ selectedDepDesignationValue }}
                       </v-text>
 
-<!--                      <v-select v-model="selectedDesignation" id="designationList" :items="designations" label="Choose designation"-->
-<!--                                :item-text="'name'" :item-value="'id'">-->
-<!--                        <option v-for="d in designations" v-bind:key="d.id" v-bind:value="d.name">-->
-<!--                          {{ d.name }}-->
-<!--                        </option>-->
-<!--                      </v-select>-->
+                      <!--                      <v-select v-model="selectedDesignation" id="designationList" :items="designations" label="Choose designation"-->
+                      <!--                                :item-text="'name'" :item-value="'id'">-->
+                      <!--                        <option v-for="d in designations" v-bind:key="d.id" v-bind:value="d.name">-->
+                      <!--                          {{ d.name }}-->
+                      <!--                        </option>-->
+                      <!--                      </v-select>-->
 
                       <v-text
                           light
@@ -157,15 +155,15 @@
                           outlined
                           style="border-radius: 10px;"
                       >
-                        {{selectedDepCategoryValue}}
+                        {{ selectedDepCategoryValue }}
                       </v-text>
 
-<!--                      <v-select v-model="selectedCategory" id="categoryList" :items="categories" label="Choose media category"-->
-<!--                                :item-text="'name'" :item-value="'id'">-->
-<!--                        <option v-for="cat in categories" v-bind:key="cat.id" v-bind:value="cat.name">-->
-<!--                          {{ cat.name }}-->
-<!--                        </option>-->
-<!--                      </v-select>-->
+                      <!--                      <v-select v-model="selectedCategory" id="categoryList" :items="categories" label="Choose media category"-->
+                      <!--                                :item-text="'name'" :item-value="'id'">-->
+                      <!--                        <option v-for="cat in categories" v-bind:key="cat.id" v-bind:value="cat.name">-->
+                      <!--                          {{ cat.name }}-->
+                      <!--                        </option>-->
+                      <!--                      </v-select>-->
 
                       <v-text
                           light
@@ -216,6 +214,7 @@
 <script>
 import axios from "axios";
 import {mdiDelete} from "@mdi/js";
+import Vue from 'vue'
 
 export default {
   name: "DepartmentSection",
@@ -258,9 +257,10 @@ export default {
     categories: [],
     designations: [],
     selectedDesignation: '',
-    newDepartmentFoundationDate: new Date().toLocaleString(),
+    newDepartmentFoundationDate: null,
     selectedDepDesignationValue: '',
     selectedDepCategoryValue: '',
+    updateKey: 0,
 
     Case: [],
 
@@ -341,9 +341,11 @@ export default {
       ).get(str)
           .then(resp => {
             console.log(resp.data)
+            this.AllDepartments = []
             for (let i = 0; i < resp.data.length; i++) {
               //this.Case.push('Case-' + resp.data[i].id + ":" + resp.data[i].title)
-              this.AllDepartments.push(resp.data[i])
+              //this.AllDepartments.push(resp.data[i])
+              Vue.set(this.AllDepartments, i, resp.data[i])
               console.log(this.AllDepartments[i])
               this.isFetchingDepartments = false
               console.log('DepLength' + this.AllDepartments.length + this.AllDepartments[i].name)
@@ -352,6 +354,8 @@ export default {
         console.log(err)
         if (this.doRefresh(err.response.status)) this.getListOfDepartments()
       })
+      Vue.$nextTick
+
     },
 
     getListOfMediaForPublisher() {
@@ -376,10 +380,9 @@ export default {
         let str = "/api/app/department/save"
         console.log(this.selectedEmployee)
         let data = {
-          assigneeId: this.selectedEmployee,
-          title: this.departmentName,
-          description: this.numberOfEmployees,
-          state: this.newCaseState
+          name: this.departmentName,
+          status: this.newDepartmentState,
+          dateFoundation: this.newDepartmentFoundationDate
         }
         console.log(data)
         axios.create(this.getHeader()
@@ -391,6 +394,7 @@ export default {
           if (this.doRefresh(err.response.status)) this.submit()
         })
         await new Promise(resolve => setTimeout(resolve, this.awaitTimer))
+        this.getListOfDepartments()
         this.updateOverlay()
 
         let data2 = {
@@ -415,7 +419,7 @@ export default {
         if (this.doRefresh(err.response.status)) this.submit()
       })
       await new Promise(resolve => setTimeout(resolve, this.awaitTimer))
-      this.updateOverlay()
+
 
       this.dialog = false
       //this.$emit('updateParent', {data2})
@@ -437,6 +441,7 @@ export default {
       console.log("opening case" + object.id)
       this.getListOfMediaForPublisher()
       //this.getListOfMediaProducts()
+      this.dialog = true
     },
 
     updateElements(CaseList) {
@@ -467,7 +472,7 @@ export default {
     this.getCategories()
     this.getDesignations()
   },
-  mounted: function() {
+  mounted: function () {
     console.log("YEEEEEEAAAA")
     this.$emit("mounted");
   }

@@ -82,79 +82,81 @@
           <v-list-item-group
 
               color="primary"
-          >
+              v-if="!this.isFetchingCases">
+            <v-list v-for="object in AllCases" :key="object.id">
+              <v-list-tile-content>
+                <v-btn
+                    color="primary"
+                    dark
+                    v-text="'Case-' + object.id + ': ' + object.title"
+                    @click="openCase(object)"
+                    width="100%"
+                    height="5%"
+                >
+                  Open Case
+                </v-btn>
+              </v-list-tile-content>
+            </v-list>
 
             <div>
               <v-dialog
                   v-model="dialog"
-                  persistent
-                  max-width="600px" v-if="!this.isFetchingCases"
+
+                  max-width="600px"
               >
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn
-                      color="primary"
-                      dark
-                      v-bind="attrs"
-                      v-on="on"
-                      v-for="(object,id) in AllCases"
-                      :key="id" :value="object.title"
-                      v-text="'Case-' + object.id + ': ' + object.title"
-                      id="hiddenButtonDialog"
-                      ref="hiddenButtonDialog"
-                      @click="openCase(object)"
-                      width="100%"
-                      height="5%"
-                  >
-                    Open Case
-                  </v-btn>
-                </template>
-<!--                <v-card>-->
-<!--                  <v-card-text class="font-weight-medium" style="font-size: 15pt; " v-if="this.caseEditorMode">-->
+<!--                <template v-slot:activator="{ on, attrs }">-->
+<!--                  <v-btn v-bind="attrs"-->
+<!--                         v-on="on" id="hiddenButtonDialog"-->
+<!--                         ref="hiddenButtonDialog">-->
+<!--                  </v-btn>-->
+<!--                </template>-->
+                <!--                <v-card>-->
+                <!--                  <v-card-text class="font-weight-medium" style="font-size: 15pt; " v-if="this.caseEditorMode">-->
 
-<!--                    <v-text-->
-<!--                        light-->
-<!--                        label="Title"-->
-<!--                        v-model="object.title"-->
-<!--                        background-color=#EDF2F7-->
-<!--                        outlined-->
-<!--                        style="border-radius: 10px;"-->
-<!--                    />-->
+                <!--                    <v-text-->
+                <!--                        light-->
+                <!--                        label="Title"-->
+                <!--                        v-model="object.title"-->
+                <!--                        background-color=#EDF2F7-->
+                <!--                        outlined-->
+                <!--                        style="border-radius: 10px;"-->
+                <!--                    />-->
 
-<!--                    <v-text-field-->
-<!--                        light-->
-<!--                        label="Description"-->
-<!--                        v-model="description"-->
-<!--                        name="Description"-->
-<!--                        type="text"-->
-<!--                        :rules="rules.clearFieldValid"-->
-<!--                        :color=changeColor()-->
-<!--                        background-color=#EDF2F7-->
-<!--                        outlined-->
-<!--                        style="border-radius: 10px;"-->
-<!--                    />-->
+                <!--                    <v-text-field-->
+                <!--                        light-->
+                <!--                        label="Description"-->
+                <!--                        v-model="description"-->
+                <!--                        name="Description"-->
+                <!--                        type="text"-->
+                <!--                        :rules="rules.clearFieldValid"-->
+                <!--                        :color=changeColor()-->
+                <!--                        background-color=#EDF2F7-->
+                <!--                        outlined-->
+                <!--                        style="border-radius: 10px;"-->
+                <!--                    />-->
 
-<!--                    <v-select v-model="selectedEmployee" id="emplList" :items="employees" label="Choose assignee"-->
-<!--                              :item-text="'name'" :item-value="'id'">-->
-<!--                      <option v-for="emp in employees" v-bind:key="emp.id" v-bind:value="emp.name">-->
-<!--                        {{ emp.name }}-->
-<!--                      </option>-->
-<!--                    </v-select>-->
+                <!--                    <v-select v-model="selectedEmployee" id="emplList" :items="employees" label="Choose assignee"-->
+                <!--                              :item-text="'name'" :item-value="'id'">-->
+                <!--                      <option v-for="emp in employees" v-bind:key="emp.id" v-bind:value="emp.name">-->
+                <!--                        {{ emp.name }}-->
+                <!--                      </option>-->
+                <!--                    </v-select>-->
 
-<!--                    <v-select v-model="newCaseState" id="newCaseState" :items="caseStates" label="Choose state">-->
-<!--                    </v-select>-->
+                <!--                    <v-select v-model="newCaseState" id="newCaseState" :items="caseStates" label="Choose state">-->
+                <!--                    </v-select>-->
 
-<!--                    <v-btn style="margin-left: 25%; margin-bottom: 5%"-->
-<!--                           :color=changeColor()-->
-<!--                           outlined-->
-<!--                           :loading="loadingSave"-->
-<!--                           @click="submitCase"-->
-<!--                    >-->
-<!--                      <v-icon style="margin-right: 8px">mdi-cloud-upload</v-icon>-->
-<!--                      Submit the case-->
-<!--                    </v-btn>-->
+                <!--                    <v-btn style="margin-left: 25%; margin-bottom: 5%"-->
+                <!--                           :color=changeColor()-->
+                <!--                           outlined-->
+                <!--                           :loading="loadingSave"-->
+                <!--                           @click="submitCase"-->
+                <!--                    >-->
+                <!--                      <v-icon style="margin-right: 8px">mdi-cloud-upload</v-icon>-->
+                <!--                      Submit the case-->
+                <!--                    </v-btn>-->
 
-<!--                  </v-card-text>-->
-<!--                </v-card>-->
+                <!--                  </v-card-text>-->
+                <!--                </v-card>-->
                 <v-card>
                   <v-card-title>
                     <span class="text-h5">{{ this.selectedCase.title }}</span>
@@ -173,7 +175,8 @@
                           outlined
                           style="border-radius: 10px;"
                       />
-                      <v-select v-model="selectedCase.assignee" id="emplList" :items="employees" label="Choose assignee"
+                      <v-select v-model="selectedCase.assigneeId" id="emplList" :items="employees"
+                                label="Choose assignee"
                                 :item-text="'name'" :item-value="'id'">
                         <option v-for="emp in employees" v-bind:key="emp.id" v-bind:value="emp.name">
                           {{ emp.name }}
@@ -217,7 +220,8 @@
                         Link to another media
                       </v-btn>
                       <v-select v-model="mMedia" id="categoryList" :items="AllMedia" label="Choose media"
-                                :item-text="'title'" :item-value="'id'" v-if="linkToMedia" :rules="rules.clearFieldValid">
+                                :item-text="'title'" :item-value="'id'" v-if="linkToMedia"
+                                :rules="rules.clearFieldValid">
                         <option v-for="mmedia in AllMedia" v-bind:key="mmedia.id" v-bind:value="mmedia.title">
                           {{ mmedia.title }}
                         </option>
@@ -235,18 +239,18 @@
                     </v-container>
                   </v-card-text>
 
-<!--                      <v-list class="overflow-y-auto" max-height="400" v-for="media in chosenCaseMedia"-->
-<!--                              :key="media.id">-->
-<!--                        <v-list-tile-content>-->
-<!--                          <v-list-tile-title v-text="media.title"></v-list-tile-title>-->
-<!--                        </v-list-tile-content>-->
+                  <!--                      <v-list class="overflow-y-auto" max-height="400" v-for="media in chosenCaseMedia"-->
+                  <!--                              :key="media.id">-->
+                  <!--                        <v-list-tile-content>-->
+                  <!--                          <v-list-tile-title v-text="media.title"></v-list-tile-title>-->
+                  <!--                        </v-list-tile-content>-->
 
-<!--                        <v-btn icon>-->
-<!--                          <v-icon>edit</v-icon>-->
-<!--                        </v-btn>-->
-<!--                      </v-list>-->
-<!--                    </v-container>-->
-<!--                  </v-card-text>-->
+                  <!--                        <v-btn icon>-->
+                  <!--                          <v-icon>edit</v-icon>-->
+                  <!--                        </v-btn>-->
+                  <!--                      </v-list>-->
+                  <!--                    </v-container>-->
+                  <!--                  </v-card-text>-->
                   <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn
@@ -378,12 +382,16 @@ export default {
       ).get(str)
           .then(resp => {
             console.log(resp.data)
+            this.AllCases = []
             for (let i = 0; i < resp.data.length; i++) {
-              this.Case.push('Case-' + resp.data[i].id + ":" + resp.data[i].title)
+              this.isFetchingCases = true
+              //Vue.set(this.AllCases,resp.data[i],i)
+              //this.Case.push('Case-' + resp.data[i].id + ":" + resp.data[i].title)
               this.AllCases.push(resp.data[i])
-              console.log(this.AllCases[i])
-              this.isFetchingCases = false
             }
+            this.$store.commit('clearAll')
+            this.$store.commit('updateList', this.AllCases)
+            this.isFetchingCases = false
           }).catch(err => {
         if (this.doRefresh(err.response.status)) this.getListOfCases()
       })
@@ -409,19 +417,18 @@ export default {
       if (this.$refs.form.validate()) {
         this.loadingSave = true
         let str = "/api/app/case/save"
-        console.log(this.selectedEmployee)
+        //console.log(this.selectedCategory)
         let data = {
           assigneeId: this.selectedEmployee,
-          title: this.caseTitle,
-          description: this.description,
-          state: this.newCaseState
+                title: this.caseTitle,
+                description: this.description,
+                state: this.newCaseState
         }
-        console.log(data)
         axios.create(this.getHeader()
         ).post(str, data)
             .then(resp => {
               console.log(resp.data)
-              this.caseEditorMode = false;
+              //this.mediaEditorMode = false;
             }).catch(err => {
           if (this.doRefresh(err.response.status)) this.submit()
         })
@@ -433,32 +440,65 @@ export default {
         }
         this.$emit('updateParent', {data2})
         this.loadingSave = false
+        this.getListOfCases()
       }
     },
 
+    // async submitCase() {
+    //   if (this.$refs.form.validate()) {
+    //     this.loadingSave = true
+    //     let str = "/api/app/case/save"
+    //     console.log(this.selectedEmployee)
+    //     let data = {
+    //       assigneeId: this.selectedEmployee,
+    //       title: this.caseTitle,
+    //       description: this.description,
+    //       state: this.newCaseState
+    //     }
+    //     console.log(data)
+    //     axios.create(this.getHeader()
+    //     ).post(str, data)
+    //         .then(resp => {
+    //           console.log(resp.data)
+    //           this.caseEditorMode = false;
+    //         }).catch(err => {
+    //       if (this.doRefresh(err.response.status)) this.submit()
+    //     })
+    //     await new Promise(resolve => setTimeout(resolve, this.awaitTimer))
+    //     this.updateOverlay()
+    //
+    //     let data2 = {
+    //       dialog: false
+    //     }
+    //     this.$emit('updateParent', {data2})
+    //     this.loadingSave = false
+    //     this.getListOfCases()
+    //   }
+    // },
+
     async updateCase(data) {
 
-        this.loadingSave = true
-        let str = "/api/app/case/save"
-        console.log(this.selectedEmployee)
-        console.log("We sent to save:" + data)
-        axios.create(this.getHeader()
-        ).post(str, data)
-            .then(resp => {
-              console.log("Server responded:" + resp.data)
-            }).catch(err => {
-          if (this.doRefresh(err.response.status)) this.submit()
-        })
-        await new Promise(resolve => setTimeout(resolve, this.awaitTimer))
-        this.updateOverlay()
+      this.loadingSave = true
+      let str = "/api/app/case/save"
+      console.log(this.selectedEmployee)
+      console.log("We sent to save:" + data)
+      axios.create(this.getHeader()
+      ).post(str, data)
+          .then(resp => {
+            console.log("Server responded:" + resp.data)
+          }).catch(err => {
+        if (this.doRefresh(err.response.status)) this.submit()
+      })
+      await new Promise(resolve => setTimeout(resolve, this.awaitTimer))
+      this.updateOverlay()
 
-        this.dialog = false
-        //this.$emit('updateParent', {data2})
-        this.loadingSave = false
+      this.dialog = false
+      //this.$emit('updateParent', {data2})
+      this.loadingSave = false
 
     },
 
-    async createLinkToMedia(mmedia,mcase) {
+    async createLinkToMedia(mmedia, mcase) {
       if (this.$refs.form.validate()) {
         this.loadingSave = true
         let str = "/api/app/caseMedia/save"
@@ -467,7 +507,7 @@ export default {
           mediaId: mmedia,
           caseId: mcase.id
         }
-        console.log("CaseMedia:"  + mcase)
+        console.log("CaseMedia:" + mcase)
         axios.create(this.getHeader()
         ).post(str, data)
             .then(resp => {
@@ -497,7 +537,7 @@ export default {
           mediaId: media.id,
           caseId: this.selectedCase.id
         }
-        console.log("CaseMedia:"  + media.id + this.selectedCase.id)
+        console.log("CaseMedia:" + media.id + this.selectedCase.id)
         axios.create(this.getHeader()
         ).post(str, data)
             .then(resp => {
@@ -531,6 +571,7 @@ export default {
       console.log(this.selectedCase)
       this.getListOfMediaForCase()
       this.getListOfMediaProducts()
+      this.dialog = true
     },
 
     updateElements(CaseList) {
@@ -560,7 +601,7 @@ export default {
     this.getEmployees()
     this.getListOfCases()
   },
-  mounted: function() {
+  mounted: function () {
     console.log("YEEEEEEAAAA")
     this.$emit("mounted");
   }
