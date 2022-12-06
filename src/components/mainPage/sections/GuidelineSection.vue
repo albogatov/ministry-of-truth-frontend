@@ -40,10 +40,10 @@
 
           <v-text-field
               light
-              label="Name"
+              label="Newspeak Version"
               v-model="newspeakVersion"
               name="Name"
-              type="text"
+              type="number"
               :rules="rules.clearFieldValid"
               :color=changeColor()
               background-color=#EDF2F7
@@ -59,6 +59,13 @@
             </option>
           </v-select>
 
+          <v-select v-model="selectedEmployee" id="emplList" :items="employees" label="Choose author"
+                    :item-text="'name'" :item-value="'id'">
+            <option v-for="emp in employees" v-bind:key="emp.id" v-bind:value="emp.name">
+              {{ emp.name }}
+            </option>
+          </v-select>
+
           <v-date-picker
               v-model="releaseDate"
               class="mt-4"
@@ -71,7 +78,7 @@
                  @click="submitGuideline"
           >
             <v-icon style="margin-right: 8px">mdi-cloud-upload</v-icon>
-            Submit department
+            Submit guideline
           </v-btn>
 
         </v-card-text>
@@ -160,7 +167,7 @@
                           :readonly="true"
                           light
                           label="Authored by"
-                          v-model="selectedGuideline.author"
+                          v-model="selectedGuidelineAuthor"
                           name="authored"
                           type="text"
                           :rules="rules.clearFieldValid"
@@ -188,11 +195,11 @@
                               v-model="dialogInner"
                               persistent
                               max-width="600px"
-                              v-if="viewingRule.guideline"
+                              v-if="viewingRule"
                           >
-                            <v-card >
+                            <v-card>
                               <v-card-title>
-                                <span class="text-h5">{{ this.viewingRule.name }}</span>
+                                <span class="text-h5">{{ viewingRule.name }}</span>
                               </v-card-title>
                               <v-text-field readonly="true"
                                             light
@@ -270,7 +277,7 @@
                         <v-text-field
                             light
                             label="Punishment"
-                            v-model="currentRule.description"
+                            v-model="currentRule.punishment"
                             name="Name"
                             type="text"
                             :rules="rules.clearFieldValid"
@@ -289,7 +296,7 @@
                                :color=changeColor()
                                outlined
                                :loading="loadingSave"
-                               @click="updateGuideline(currentRule, selectedGuideline)"
+                               @click="updateGuideline(currentRule, selectedGuideline.id)"
                         >
                           <v-icon style="margin-right: 8px">mdi-cloud-upload</v-icon>
                           Save rule
@@ -298,7 +305,7 @@
                                :color=changeColor()
                                outlined
                                :loading="loadingSave"
-                               @click="dialogInner = false"
+                               @click="dialog = false"
                         >
                           <v-icon style="margin-right: 8px">mdi-cloud-upload</v-icon>
                           Discard changes
@@ -376,7 +383,7 @@ export default {
     selectedDesignation: '',
     releaseDate: null,
     selectedDepDesignationValue: '',
-    selectedDepCategoryValue: '',
+    selectedGuidelineAuthor: '',
     updateKey: 0,
     guidelineDepartment: '',
     newspeakVersion: '',
@@ -392,6 +399,8 @@ export default {
       punishment: '',
       installmentDate: ''
     },
+    viewingRuleDescription: '',
+
     dialogInner: false,
 
     Case: [],
@@ -478,9 +487,11 @@ export default {
     },
 
     openLinkedRule(rule) {
+      this.viewingRule = rule;
+      this.viewingRuleDescription = rule.name
       console.log('ruleeee')
       console.log(rule)
-      this.viewingRule = rule;
+
       console.log(this.viewingRule)
       this.dialogInner = true;
     },
@@ -494,7 +505,8 @@ export default {
           name: this.guidelineName,
           releaseDate: this.releaseDate,
           newspeakVersion: this.newspeakVersion,
-          department: this.guidelineDepartment
+          department: this.guidelineDepartment,
+          authorId: this.selectedEmployee
         }
         console.log(data)
         axios.create(this.getHeader()
@@ -523,7 +535,7 @@ export default {
       let str = "/api/app/rule/save"
       console.log(this.selectedGuideline)
       console.log("We sent to save:" + data)
-      data.guideline = guideline
+      data.guidelineId = guideline
       axios.create(this.getHeader()
       ).post(str, data)
           .then(resp => {
@@ -555,11 +567,30 @@ export default {
       // this.selectedDepCategoryValue = object.mediaCategory.name
       // this.selectedDepDesignationValue = object.designation.name
       this.object = object
+      this.selectedGuidelineAuthor = object.author.name
       console.log("opening case" + object.id)
       this.getListOfRulesForGuideline(this.selectedGuideline)
       //this.getListOfMediaProducts()
       this.dialog = true
     },
+
+    getEmployees() {
+      let str = "/api/app/employee/all"
+      axios.get(str, this.getHeader())
+          .then(resp => {
+            for (let i = 0; i < resp.data.length; i++) {
+              this.object = {
+                "id": resp.data[i].id,
+                "name": resp.data[i].name
+              }
+              this.employees.push(resp.data[i])
+            }
+
+          }).catch(err => {
+        console.log(err)
+      })
+    },
+
 
     updateElements(CaseList) {
       if (CaseList !== this.Case[0]) {
@@ -587,6 +618,7 @@ export default {
     //this.updateOverlay()
     this.getListOfGuidelines()
     this.getListOfDepartments()
+    this.getEmployees()
   },
   mounted: function () {
     console.log("YEEEEEEAAAA")
