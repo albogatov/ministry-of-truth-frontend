@@ -143,6 +143,7 @@ export default {
               localStorage.token = resp.data.message
               localStorage.refreshToken = resp.data.refreshToken
               localStorage.login = this.login
+              localStorage.accessLevel = resp.data.accessLevel
               console.log(resp.data.message);
               await new Promise(resolve => setTimeout(resolve, this.awaitTimer))
               await router.push({path: '/main'})

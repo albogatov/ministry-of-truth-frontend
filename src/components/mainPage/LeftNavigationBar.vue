@@ -57,12 +57,12 @@
                 </v-btn>
 
                 <v-btn @click="setSection('DepartmentSection')" v-bind="attrs" v-on="on" width="100%"
-                       class="navigationButton" outlined>
+                       class="navigationButton" outlined v-if="accessLevel > 2">
                   See Departments
                 </v-btn>
 
                 <v-btn @click="setSection('EmployeeSection')" v-bind="attrs" v-on="on" width="100%"
-                       class="navigationButton" outlined>
+                       class="navigationButton" outlined v-if="accessLevel > 1">
                   See Employees
                 </v-btn>
 
@@ -125,7 +125,8 @@ export default {
     modeSwitch: Boolean,
     login: '',
     colorSlider: '',
-    section: ''
+    section: '',
+    accessLevel: 1
   }),
   methods: {
 
@@ -173,7 +174,7 @@ export default {
     this.colorSlider = this.$store.getters.getPrimaryColor
     this.modeSwitch = true
     this.login = localStorage.login
-    this.userAccess = localStorage.userAccessLevel
+    this.accessLevel = localStorage.accessLevel
   }
 }
 </script>
