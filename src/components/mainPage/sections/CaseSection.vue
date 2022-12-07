@@ -323,11 +323,11 @@ export default {
 
     rules: {
       clearFieldValid: [
-        v => !!v || 'Поле не может быть пустым'
+        v => !!v || 'This field cannot be empty'
       ],
       numberValid: [
-        v => !!v || 'Поле не может быть пустым',
-        v => !!/^\d*$/.test(v) || 'Допустимы только числа',
+        v => !!v || 'This field cannot be empty',
+        v => !!/^\d*$/.test(v) || 'Numeric values only',
       ],
     },
   }),
@@ -337,6 +337,7 @@ export default {
       // while(this.isFetchingCases)
       //   console.log('loading')
       this.selectedCase = obj
+      this.getListOfMediaForCase()
       this.dialog = true
     },
 

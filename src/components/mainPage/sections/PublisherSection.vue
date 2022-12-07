@@ -43,6 +43,7 @@
               v-model="numberOfEmployees"
               name="NumberOfEmployees"
               type="number"
+              min="1"
               :rules="rules.clearFieldValid"
               :color=changeColor()
               background-color=#EDF2F7
@@ -155,6 +156,7 @@
                           :rules="rules.clearFieldValid"
                           :color=changeColor()
                           background-color=#EDF2F7
+                          min="1"
                           outlined
                           style="border-radius: 10px;"
                       />
@@ -290,11 +292,11 @@ export default {
 
     rules: {
       clearFieldValid: [
-        v => !!v || 'Поле не может быть пустым'
+        v => !!v || 'This field cannot be empty'
       ],
       numberValid: [
-        v => !!v || 'Поле не может быть пустым',
-        v => !!/^\d*$/.test(v) || 'Допустимы только числа',
+        v => !!v || 'This field cannot be empty',
+        v => !!/^\d*$/.test(v) || 'Numeric values only',
       ],
     },
   }),

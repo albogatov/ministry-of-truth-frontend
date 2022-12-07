@@ -40,6 +40,7 @@
                 label="Enter Age"
                 name="Age"
                 type="number"
+                min="18"
                 color="black"
                 v-model="age"
                 auto-grow
@@ -74,6 +75,7 @@
                 label="Number of children"
                 v-model="numberOfChildren"
                 name="Number of children"
+                min="0"
                 :color=changeColor()
                 type="number"
                 background-color=#EDF2F7

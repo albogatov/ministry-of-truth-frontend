@@ -100,7 +100,7 @@
               <v-icon left>
                 mdi-arrow-left
               </v-icon>
-              Выйти из системы
+              Log Out
             </v-btn>
           </v-row>
         </template>

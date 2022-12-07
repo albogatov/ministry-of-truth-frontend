@@ -46,21 +46,23 @@
               :rules="rules.clearFieldValid"
               :color=changeColor()
               background-color=#EDF2F7
+              min="0"
+              max="40"
               outlined
               style="border-radius: 10px;"
           />
 
-          <v-select v-model="selectedCategory" id="categoryList" :items="categories" label="Choose media category"
+          <v-select  :rules="rules.clearFieldValid" v-model="selectedCategory" id="categoryList" :items="categories" label="Choose media category"
                     :item-text="'name'" :item-value="'id'">
             <option v-for="cat in categories" v-bind:key="cat.id" v-bind:value="cat.name">
               {{ cat.name }}
             </option>
           </v-select>
 
-          <v-select v-model="newMediaState" id="newMediaState" :items="mediaStates" label="Choose state">
+          <v-select  :rules="rules.clearFieldValid" v-model="newMediaState" id="newMediaState" :items="mediaStates" label="Choose state">
           </v-select>
 
-          <v-select v-model="selectedPublisher" id="publisherList" :items="publishers" label="Choose publisher"
+          <v-select  :rules="rules.clearFieldValid" v-model="selectedPublisher" id="publisherList" :items="publishers" label="Choose publisher"
                     :item-text="'name'" :item-value="'id'">
             <option v-for="cat in publishers" v-bind:key="cat.id" v-bind:value="cat.name">
               {{ cat.name }}
@@ -128,6 +130,8 @@
                           :color=changeColor()
                           background-color=#EDF2F7
                           outlined
+                          min="0"
+                          max="40"
                           style="border-radius: 10px;"
                       />
                       <v-select :readonly="true" v-model="selectedMedia.mediaCategoryId" id="categoryList" :items="categories"
@@ -280,11 +284,11 @@ export default {
 
     rules: {
       clearFieldValid: [
-        v => !!v || 'Поле не может быть пустым'
+        v => !!v || 'This field cannot be empty'
       ],
       numberValid: [
-        v => !!v || 'Поле не может быть пустым',
-        v => !!/^\d*$/.test(v) || 'Допустимы только числа',
+        v => !!v || 'This field cannot be empty',
+        v => !!/^\d*$/.test(v) || 'Numeric values only',
       ],
     },
   }),
@@ -294,6 +298,7 @@ export default {
       // while(this.isFetchingCases)
       //   console.log('loading')
       this.selectedMedia = obj
+      this.getListOfCasesForMedia()
       this.dialog = true
     },
 

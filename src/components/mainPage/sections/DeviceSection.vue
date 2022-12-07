@@ -37,15 +37,16 @@
               style="border-radius: 10px;"
           />
 
-          <v-select v-model="newDeviceType" id="newMediaState" :items="deviceTypes" label="Choose type">
+          <v-select :rules="rules.clearFieldValid" v-model="newDeviceType" id="newMediaState" :items="deviceTypes" label="Choose type">
           </v-select>
 
           <v-date-picker
+              :rules="rules.clearFieldValid"
               v-model="newDateMade"
               class="mt-4"
           ></v-date-picker>
 
-          <v-select v-model="selectedEmployee" id="employeeList" :items="employees" label="Choose maintainer"
+          <v-select :rules="rules.clearFieldValid" v-model="selectedEmployee" id="employeeList" :items="employees" label="Choose maintainer"
                     :item-text="'name'" :item-value="'id'">
             <option v-for="cat in employees" v-bind:key="cat.id" v-bind:value="cat.name">
               {{ cat.name }}
@@ -121,7 +122,7 @@
                       />
 
 
-                      <v-select v-model="selectedEmployee" id="employeeList" :items="employees" label="Maintainer"
+                      <v-select v-model="selectedDevice.maintainerId" id="employeeList" :items="employees" label="Maintainer"
                                 :item-text="'name'" :item-value="'id'">
                         <option v-for="cat in employees" v-bind:key="cat.id" v-bind:value="cat.name">
                           {{ cat.name }}
@@ -260,11 +261,11 @@ export default {
 
     rules: {
       clearFieldValid: [
-        v => !!v || 'Поле не может быть пустым'
+        v => !!v || 'This field cannot be empty'
       ],
       numberValid: [
-        v => !!v || 'Поле не может быть пустым',
-        v => !!/^\d*$/.test(v) || 'Допустимы только числа',
+        v => !!v || 'This field cannot be empty',
+        v => !!/^\d*$/.test(v) || 'Numeric values only',
       ],
     },
   }),

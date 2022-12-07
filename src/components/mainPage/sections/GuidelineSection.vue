@@ -44,6 +44,8 @@
               v-model="newspeakVersion"
               name="Name"
               type="number"
+              min="1"
+              max="2"
               :rules="rules.clearFieldValid"
               :color=changeColor()
               background-color=#EDF2F7
@@ -51,7 +53,7 @@
               style="border-radius: 10px;"
           />
 
-          <v-select v-model="guidelineDepartment" id="departmentList" :items="AllDepartments"
+          <v-select  :rules="rules.clearFieldValid" v-model="guidelineDepartment" id="departmentList" :items="AllDepartments"
                     label="Choose department"
                     :item-text="'name'" :item-value="'id'">
             <option v-for="dep in AllDepartments" v-bind:key="dep.id" v-bind:value="dep.name">
@@ -59,14 +61,14 @@
             </option>
           </v-select>
 
-          <v-select v-model="selectedEmployee" id="emplList" :items="employees" label="Choose author"
+          <v-select  :rules="rules.clearFieldValid" v-model="selectedEmployee" id="emplList" :items="employees" label="Choose author"
                     :item-text="'name'" :item-value="'id'">
             <option v-for="emp in employees" v-bind:key="emp.id" v-bind:value="emp.name">
               {{ emp.name }}
             </option>
           </v-select>
 
-          <v-date-picker
+          <v-date-picker :rules="rules.clearFieldValid"
               v-model="releaseDate"
               class="mt-4"
           ></v-date-picker>
@@ -117,7 +119,7 @@
               >
                 <v-card v-if="!this.isFetchingGuidelines && this.selectedGuideline != null">
                   <v-card-title>
-                    <span class="text-h5">{{ this.selectedGuideline.name }}</span>
+                    <span class="text-h5">{{ selectedGuideline.name }}</span>
                   </v-card-title>
                   <v-card-text>
                     <v-container>
@@ -149,11 +151,10 @@
                           style="border-radius: 10px;"
                       />
 
-                      <v-select :readonly=true v-model="selectedGuideline.department" id="departmentList"
-                                :items="AllGuidelines"
-                                label="Department"
+                      <v-select v-model="selectedGuideline.departmentId" id="departmentList" :items="AllDepartments"
+                                label="Choose department"
                                 :item-text="'name'" :item-value="'id'">
-                        <option v-for="dep in AllGuidelines" v-bind:key="dep.id" v-bind:value="dep.name">
+                        <option v-for="dep in AllDepartments" v-bind:key="dep.id" v-bind:value="dep.name">
                           {{ dep.name }}
                         </option>
                       </v-select>
@@ -400,6 +401,7 @@ export default {
       installmentDate: ''
     },
     viewingRuleDescription: '',
+    selectedGuidelineDepartment: null,
 
     dialogInner: false,
 
@@ -407,11 +409,11 @@ export default {
 
     rules: {
       clearFieldValid: [
-        v => !!v || 'Поле не может быть пустым'
+        v => !!v || 'This field cannot be empty'
       ],
       numberValid: [
-        v => !!v || 'Поле не может быть пустым',
-        v => !!/^\d*$/.test(v) || 'Допустимы только числа',
+        v => !!v || 'This field cannot be empty',
+        v => !!/^\d*$/.test(v) || 'Numeric values only',
       ],
     },
   }),
@@ -505,7 +507,7 @@ export default {
           name: this.guidelineName,
           releaseDate: this.releaseDate,
           newspeakVersion: this.newspeakVersion,
-          department: this.guidelineDepartment,
+          departmentId: this.guidelineDepartment,
           authorId: this.selectedEmployee
         }
         console.log(data)
@@ -570,6 +572,7 @@ export default {
       this.selectedGuidelineAuthor = object.author.name
       console.log("opening case" + object.id)
       this.getListOfRulesForGuideline(this.selectedGuideline)
+      this.selectedGuidelineDepartment = object.department.name
       //this.getListOfMediaProducts()
       this.dialog = true
     },
