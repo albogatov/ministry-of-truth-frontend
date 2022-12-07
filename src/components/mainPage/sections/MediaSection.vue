@@ -149,7 +149,7 @@
                           @click="openPublisher(selectedMediaPublisher)"
                           width="80%"
                           height="5%"
-                          v-if="!isFetchingPublishers"
+                          v-if="selectedMediaPublisher"
                       >
                         Open Case
                       </v-btn>
@@ -212,7 +212,7 @@
                     <v-btn
                         color="blue darken-1"
                         text
-                        @click="dialog = false; linkToCase = false;"
+                        @click="dialog = false; linkToCase = false; selectedMediaPublisher = null"
                     >
                       Close
                     </v-btn>
@@ -379,7 +379,7 @@ export default {
               //this.Case.push('Case-' + resp.data[i].id + ":" + resp.data[i].title)
               this.publishers.push(resp.data[i])
               console.log(this.publishers[i])
-              //this.isFetchingPublishers = false
+              this.isFetchingPublishers = false
             }
           }).catch(err => {
         console.log(err)
@@ -387,11 +387,11 @@ export default {
       })
     },
 
-    isStillFetchingPublishers() {
-      if(this.selectedMedia.publisher.name == null)
-        this.isFetchingPublishers = true;
-      else this.isFetchingPublishers = false;
-    },
+    // isStillFetchingPublishers() {
+    //   if(this.selectedMedia.publisher.name == null)
+    //     this.isFetchingPublishers = true;
+    //   else this.isFetchingPublishers = false;
+    // },
 
     async submitMedia() {
       if (this.$refs.form.validate()) {
@@ -403,7 +403,7 @@ export default {
           title: this.mediaTitle,
           estimation: this.estimation,
           status: this.newMediaState,
-          publisher: this.selectedPublisher.id
+          publisherId: this.selectedPublisher
         }
         console.log(data)
         axios.create(this.getHeader()
@@ -526,7 +526,7 @@ export default {
       console.log("Selected media")
       console.log(this.selectedMedia)
       this.selectedMediaPublisher = object.publisher
-      this.isStillFetchingPublishers()
+      //this.isStillFetchingPublishers()
       this.dialog = true
     },
 

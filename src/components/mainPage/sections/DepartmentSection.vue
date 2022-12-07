@@ -10,7 +10,7 @@
           </div>
         </v-card-text>
 
-        <v-btn style="margin-left: 25%; margin-bottom: 5%"
+        <v-btn style="margin-left: 25%; "
                :color=changeColor()
                outlined
                :loading="loadingSave"
@@ -64,28 +64,28 @@
               style="border-radius: 10px;"
           />
 
-          <v-select v-model="newDepartmentState" id="newDepartmentState" :items="departmentStates" label="Choose state">
+          <v-select :rules="rules.clearFieldValid" v-model="newDepartmentState" id="newDepartmentState" :items="departmentStates" label="Choose state">
           </v-select>
 
-          <v-select v-model="selectedDesignation" id="designationList" :items="designations" label="Choose designation"
+          <v-select :rules="rules.clearFieldValid" v-model="selectedDesignation" id="designationList" :items="designations" label="Choose designation"
                     :item-text="'name'" :item-value="'id'">
             <option v-for="d in designations" v-bind:key="d.id" v-bind:value="d.name">
               {{ d.name }}
             </option>
           </v-select>
 
-          <v-select v-model="selectedCategory" id="categoryList" :items="categories" label="Choose media category"
+          <v-select :rules="rules.clearFieldValid"  v-model="selectedCategory" id="categoryList" :items="categories" label="Choose media category"
                     :item-text="'name'" :item-value="'id'">
             <option v-for="cat in categories" v-bind:key="cat.id" v-bind:value="cat.name">
               {{ cat.name }}
             </option>
           </v-select>
-
+          <div label="Pick foundation date">
           <v-date-picker
               v-model="newDepartmentFoundationDate"
               class="mt-4"
           ></v-date-picker>
-
+          </div>
           <v-btn style="margin-left: 25%; margin-bottom: 5%"
                  :color=changeColor()
                  outlined
@@ -110,7 +110,7 @@
               color="primary"
           >
 
-            <div v-if="this.AllDepartments.length > 0">
+            <div v-if="AllDepartments.length > 0">
               <v-list v-for="object in AllDepartments" :key="object.id">
                 <v-list-tile-content>
                   <v-btn
@@ -128,11 +128,11 @@
               <v-dialog
                   v-model="dialog"
                   persistent
-                  max-width="600px" v-if="!this.isFetchingDepartments"
+                  max-width="600px" v-if="selectedDepartment"
               >
-                <v-card v-if="!this.isFetchingDepartments">
+                <v-card v-if="selectedDepartment">
                   <v-card-title>
-                    <span class="text-h5">{{ this.selectedDepartment.name }}</span>
+                    <span class="text-h5">{{ selectedDepartment.name }}</span>
                   </v-card-title>
                   <v-card-text>
                     <v-container>
@@ -151,18 +151,30 @@
                                 label="Choose state">
                       </v-select>
 
-                      <v-text
+<!--                      <v-text-->
+<!--                          light-->
+<!--                          label="Designation"-->
+<!--                          v-model="selectedDepartment.designation"-->
+<!--                          name="Designation"-->
+<!--                          :color=changeColor()-->
+<!--                          background-color=#EDF2F7-->
+<!--                          outlined-->
+<!--                          style="border-radius: 10px;"-->
+<!--                      >-->
+<!--                        {{ selectedDepDesignationValue }}-->
+<!--                      </v-text>-->
+
+                      <v-text-field
+                          :readonly="true"
                           light
                           label="Designation"
-                          v-model="selectedDepartment.designation"
+                          v-model="selectedDepDesignationValue"
                           name="Designation"
                           :color=changeColor()
                           background-color=#EDF2F7
                           outlined
                           style="border-radius: 10px;"
-                      >
-                        {{ selectedDepDesignationValue }}
-                      </v-text>
+                      />
 
                       <!--                      <v-select v-model="selectedDesignation" id="designationList" :items="designations" label="Choose designation"-->
                       <!--                                :item-text="'name'" :item-value="'id'">-->
@@ -174,15 +186,26 @@
                       <v-text
                           light
                           label="Media Category"
-                          v-model="selectedDepartment.mediaCategory"
+                          v-model="selectedDepCategoryValue"
                           name="Media Category"
                           :color=changeColor()
                           background-color=#EDF2F7
                           outlined
                           style="border-radius: 10px;"
                       >
-                        {{ selectedDepCategoryValue }}
                       </v-text>
+
+                      <v-text-field
+                          :readonly="true"
+                          light
+                          label="Media Category"
+                          v-model="selectedDepCategoryValue"
+                          name="Media Category"
+                          :color=changeColor()
+                          background-color=#EDF2F7
+                          outlined
+                          style="border-radius: 10px;"
+                      />
 
                       <!--                      <v-select v-model="selectedCategory" id="categoryList" :items="categories" label="Choose media category"-->
                       <!--                                :item-text="'name'" :item-value="'id'">-->
@@ -191,7 +214,8 @@
                       <!--                        </option>-->
                       <!--                      </v-select>-->
 
-                      <v-text
+                      <v-text-field
+                          :readonly="true"
                           light
                           label="Date Founded"
                           v-model="selectedDepartment.dateFoundation"
@@ -203,6 +227,7 @@
                       />
 
                       <v-date-picker
+                          label="Choose termination date if needed"
                           v-model="this.selectedDepartment.dateTermination"
                           class="mt-4"
                       ></v-date-picker>
@@ -218,9 +243,8 @@
                         See department stats
                       </v-btn>
 
-                      <v-text
+                      <v-text-field
                           :readonly="true"
-                          v-if="departmentClosedCases != ''"
                           light
                           label="This department solved cases:"
                           v-model="departmentClosedCases"
@@ -231,7 +255,7 @@
                           style="border-radius: 10px;"
                       >
                         {{departmentClosedCases}}
-                      </v-text>
+                      </v-text-field>
 
                       <v-btn style="margin-left: 25%; margin-bottom: 5%"
                              :color=changeColor()
@@ -246,9 +270,8 @@
 
                       <v-text-field
                           :readonly="true"
-                          v-if="departmentTargetReached != ''"
                           light
-                          label="This department solved cases:"
+                          label="Did this department reach the target?"
                           v-model="departmentTargetReached"
                           name="Name"
                           :color=changeColor()
@@ -264,7 +287,7 @@
                     <v-btn
                         color="blue darken-1"
                         text
-                        @click="dialog = false; departmentClosedCases = ''; departmentTargetReached = ''"
+                        @click="dialog = false;"
                     >
                       Close
                     </v-btn>
@@ -508,7 +531,9 @@ export default {
         let data = {
           name: this.departmentName,
           status: this.newDepartmentState,
-          dateFoundation: this.newDepartmentFoundationDate
+          dateFoundation: this.newDepartmentFoundationDate,
+          mediaCategoryId: this.selectedCategory,
+          designationId: this.selectedDesignation
         }
         console.log(data)
         axios.create(this.getHeader()
@@ -565,7 +590,8 @@ export default {
       this.selectedDepDesignationValue = object.designation.name
       this.object = object
       console.log("opening case" + object.id)
-      this.getListOfMediaForPublisher()
+      console.log(object)
+      //this.getListOfMediaForPublisher()
       //this.getListOfMediaProducts()
       this.dialog = true
     },
