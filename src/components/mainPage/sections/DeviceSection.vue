@@ -209,7 +209,11 @@
             </div>
           </v-list-item-group>
         </v-list>
-
+        <v-dialog v-model="alertTrue">
+          <v-alert>
+            {{this.alertMessage}}
+          </v-alert>
+        </v-dialog>
       </v-card>
     </v-card>
   </div>
@@ -256,6 +260,8 @@ export default {
     publishers: [],
     selectedMediaPublisher: null,
     newDateMade: '',
+    alertTrue: false,
+    alertMessage: '',
 
     Media: [],
 
@@ -390,7 +396,20 @@ export default {
         ).post(str, data)
             .then(resp => {
               console.log(resp.data)
-              this.deviceEditorMode = false;
+
+              if(resp.data.cause == undefined)
+                this.deviceEditorMode = false;
+              //this.mediaEditorMode = false;
+              else {
+                this.alertMessage = resp.data.cause.serverErrorMessage.message
+                this.alertTrue = true
+                // this.setInterval(() => {
+                //   this.alertTrue = false
+                //   console.log("hide alert after 3 seconds");
+                // }, 5000)
+                setTimeout(() => {this.alertTrue = false
+                  console.log("hide alert after 3 seconds");}, 10000)
+              }
             }).catch(err => {
           if (this.doRefresh(err.response.status)) this.submit()
         })
@@ -420,7 +439,20 @@ export default {
         axios.create(this.getHeader()
         ).post(str, data)
             .then(resp => {
-              console.log(resp.data)
+              if(resp.data.cause == undefined)
+                console.log("all good")
+                //this.deviceEditorMode = false;
+              //this.mediaEditorMode = false;
+              else {
+                this.alertMessage = resp.data.cause.serverErrorMessage.message
+                this.alertTrue = true
+                // this.setInterval(() => {
+                //   this.alertTrue = false
+                //   console.log("hide alert after 3 seconds");
+                // }, 5000)
+                setTimeout(() => {this.alertTrue = false
+                  console.log("hide alert after 3 seconds");}, 10000)
+              }
               //this.mediaEditorMode = false;
             }).catch(err => {
           if (this.doRefresh(err.response.status)) this.submit()
@@ -485,6 +517,20 @@ export default {
       ).post(str, data)
           .then(resp => {
             console.log("Server responded:" + resp.data)
+            if(resp.data.cause == undefined)
+              console.log("all good")
+                //this.deviceEditorMode = false;
+            //this.mediaEditorMode = false;
+            else {
+              this.alertMessage = resp.data.cause.serverErrorMessage.message
+              this.alertTrue = true
+              // this.setInterval(() => {
+              //   this.alertTrue = false
+              //   console.log("hide alert after 3 seconds");
+              // }, 5000)
+              setTimeout(() => {this.alertTrue = false
+                console.log("hide alert after 3 seconds");}, 10000)
+            }
           }).catch(err => {
         if (this.doRefresh(err.response.status)) this.submit()
       })
