@@ -13,6 +13,32 @@
         <v-btn style="margin-left: 25%; margin-bottom: 5%"
                :color=changeColor()
                outlined
+               :loading="loadingSave"
+               @click="checkDepartmentsTarget"
+               v-if="accessLevel > 3"
+        >
+          <v-icon style="margin-right: 8px">mdi-cloud-upload</v-icon>
+          Count departments that are falling behind
+        </v-btn>
+
+        <v-text-field
+            :readonly="true"
+            v-if="failedDepartments != false"
+            light
+            label="There are departments failing:"
+            v-model="failedDepartments"
+            name="Name"
+            :color=changeColor()
+            background-color=#EDF2F7
+            outlined
+            style="border-radius: 10px;"
+        />
+
+        <v-text-field></v-text-field>
+
+        <v-btn style="margin-left: 25%; margin-bottom: 5%"
+               :color=changeColor()
+               outlined
                @click="departmentEditorMode = true"
         >
           <v-icon style="margin-right: 8px">mdi-cloud-upload</v-icon>
@@ -41,19 +67,19 @@
           <v-select v-model="newDepartmentState" id="newDepartmentState" :items="departmentStates" label="Choose state">
           </v-select>
 
-                    <v-select v-model="selectedDesignation" id="designationList" :items="designations" label="Choose designation"
-                              :item-text="'name'" :item-value="'id'">
-                      <option v-for="d in designations" v-bind:key="d.id" v-bind:value="d.name">
-                        {{ d.name }}
-                      </option>
-                    </v-select>
+          <v-select v-model="selectedDesignation" id="designationList" :items="designations" label="Choose designation"
+                    :item-text="'name'" :item-value="'id'">
+            <option v-for="d in designations" v-bind:key="d.id" v-bind:value="d.name">
+              {{ d.name }}
+            </option>
+          </v-select>
 
-                    <v-select v-model="selectedCategory" id="categoryList" :items="categories" label="Choose media category"
-                              :item-text="'name'" :item-value="'id'">
-                      <option v-for="cat in categories" v-bind:key="cat.id" v-bind:value="cat.name">
-                        {{ cat.name }}
-                      </option>
-                    </v-select>
+          <v-select v-model="selectedCategory" id="categoryList" :items="categories" label="Choose media category"
+                    :item-text="'name'" :item-value="'id'">
+            <option v-for="cat in categories" v-bind:key="cat.id" v-bind:value="cat.name">
+              {{ cat.name }}
+            </option>
+          </v-select>
 
           <v-date-picker
               v-model="newDepartmentFoundationDate"
@@ -181,6 +207,56 @@
                           class="mt-4"
                       ></v-date-picker>
 
+                      <v-btn style="margin-left: 25%; margin-bottom: 5%"
+                             :color=changeColor()
+                             outlined
+                             :loading="loadingSave"
+                             @click="checkDepartment"
+                             v-if="accessLevel > 2"
+                      >
+                        <v-icon style="margin-right: 8px">mdi-cloud-upload</v-icon>
+                        See department stats
+                      </v-btn>
+
+                      <v-text
+                          :readonly="true"
+                          v-if="departmentClosedCases != ''"
+                          light
+                          label="This department solved cases:"
+                          v-model="departmentClosedCases"
+                          name="Name"
+                          :color=changeColor()
+                          background-color=#EDF2F7
+                          outlined
+                          style="border-radius: 10px;"
+                      >
+                        {{departmentClosedCases}}
+                      </v-text>
+
+                      <v-btn style="margin-left: 25%; margin-bottom: 5%"
+                             :color=changeColor()
+                             outlined
+                             :loading="loadingSave"
+                             @click="checkDepartmentTarget"
+                             v-if="accessLevel > 2"
+                      >
+                        <v-icon style="margin-right: 8px">mdi-cloud-upload</v-icon>
+                        Check Department Target
+                      </v-btn>
+
+                      <v-text-field
+                          :readonly="true"
+                          v-if="departmentTargetReached != ''"
+                          light
+                          label="This department solved cases:"
+                          v-model="departmentTargetReached"
+                          name="Name"
+                          :color=changeColor()
+                          background-color=#EDF2F7
+                          outlined
+                          style="border-radius: 10px;"
+                      />
+
                     </v-container>
                   </v-card-text>
                   <v-card-actions>
@@ -188,7 +264,7 @@
                     <v-btn
                         color="blue darken-1"
                         text
-                        @click="dialog = false;"
+                        @click="dialog = false; departmentClosedCases = ''; departmentTargetReached = ''"
                     >
                       Close
                     </v-btn>
@@ -261,6 +337,10 @@ export default {
     selectedDepDesignationValue: '',
     selectedDepCategoryValue: '',
     updateKey: 0,
+    failedDepartments: false,
+    departmentClosedCases: '',
+    departmentTargetReached: '',
+    accessLevel: 1,
 
     Case: [],
 
@@ -356,6 +436,52 @@ export default {
       })
       Vue.$nextTick
 
+    },
+
+    checkDepartmentsTarget() {
+      let str = "/api/app/department/countTargetFailed"
+
+      axios.create(this.getHeader()
+      ).get(str)
+          .then(resp => {
+            console.log(resp.data)
+            this.failedDepartments = resp.data;
+          }).catch(err => {
+        console.log(err)
+        if (this.doRefresh(err.response.status)) this.getListOfDepartments()
+      })
+    },
+
+    checkDepartment() {
+      let str = "/api/app/department/getStats"
+      let data = {
+        id: this.selectedDepartment.id
+      }
+      axios.create(this.getHeader()
+      ).post(str, data)
+          .then(resp => {
+            console.log(resp.data)
+            this.departmentClosedCases = resp.data;
+          }).catch(err => {
+        console.log(err)
+        if (this.doRefresh(err.response.status)) this.getListOfDepartments()
+      })
+    },
+
+    checkDepartmentTarget() {
+      let str = "/api/app/department/checkTarget"
+      let data = {
+        id: this.selectedDepartment.id
+      }
+      axios.create(this.getHeader()
+      ).post(str, data)
+          .then(resp => {
+            console.log(resp.data)
+            this.departmentTargetReached = resp.data;
+          }).catch(err => {
+        console.log(err)
+        if (this.doRefresh(err.response.status)) this.getListOfDepartments()
+      })
     },
 
     getListOfMediaForPublisher() {
@@ -465,13 +591,16 @@ export default {
     changeColor() {
       return this.primaryColor(this.$store.getters.getPrimaryColor)
     },
-  },
+  }
+  ,
   beforeMount() {
     //this.updateOverlay()
     this.getListOfDepartments()
     this.getCategories()
     this.getDesignations()
-  },
+    this.accessLevel = localStorage.accessLevel
+  }
+  ,
   mounted: function () {
     console.log("YEEEEEEAAAA")
     this.$emit("mounted");
