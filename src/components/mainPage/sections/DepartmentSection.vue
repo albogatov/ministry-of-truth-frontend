@@ -46,7 +46,7 @@
         </v-btn>
 
         <v-card-text class="font-weight-medium" style="font-size: 15pt; "
-                     v-if="this.departmentEditorMode && !this.isFetchingDepartments">
+                     v-if="this.departmentEditorMode">
           <div style="margin-top: 5px; margin-bottom: 20px; color: black; font-weight: lighter">
             Enter data for the department
           </div>
@@ -205,11 +205,11 @@
 
                       <v-text value="Pick foundation date" v-if="selectedDepartment.dateTermination == undefined">
                         Select date of termination (if this date is in the past the department will be terminated)
-                      <v-date-picker
-                          label="Choose termination date if needed"
-                          v-model="selectedDepartment.dateTermination"
-                          class="mt-4"
-                      ></v-date-picker>
+                        <v-date-picker
+                            label="Choose termination date if needed"
+                            v-model="selectedDepartment.dateTermination"
+                            class="mt-4"
+                        ></v-date-picker>
                       </v-text>
 
                       <v-text-field v-if="selectedDepartment.dateTermination != undefined" :readonly="true"
@@ -222,11 +222,13 @@
                                     outlined
                                     style="border-radius: 10px;">
                       </v-text-field>
-                      <v-btn v-if="selectedDepartment.dateTermination != undefined && selectedDepartment.status != 'Terminated'" style="margin-left: 25%; margin-bottom: 5%"
-                             :color=changeColor()
-                             outlined
-                             :loading="loadingSave"
-                             @click="selectedDepartment.dateTermination = null"
+                      <v-btn
+                          v-if="selectedDepartment.dateTermination != undefined && selectedDepartment.status != 'Terminated'"
+                          style="margin-left: 25%; margin-bottom: 5%"
+                          :color=changeColor()
+                          outlined
+                          :loading="loadingSave"
+                          @click="selectedDepartment.dateTermination = null"
                       >
                         <v-icon style="margin-right: 8px">mdi-cloud-upload</v-icon>
                         Change termination date
@@ -425,9 +427,7 @@ export default {
             this.AllDepartments = []
             for (let i = 0; i < resp.data.length; i++) {
               Vue.set(this.AllDepartments, i, resp.data[i])
-              console.log(this.AllDepartments[i])
               this.isFetchingDepartments = false
-              console.log('DepLength' + this.AllDepartments.length + this.AllDepartments[i].name)
             }
           }).catch(err => {
         console.log(err)

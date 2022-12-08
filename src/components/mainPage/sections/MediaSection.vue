@@ -431,7 +431,12 @@ export default {
         })
         await new Promise(resolve => setTimeout(resolve, this.awaitTimer))
         this.updateOverlay()
-
+        this.newMediaState = 'Discovered'
+        this.mediaTitle = ''
+        this.selectedCategory = ''
+        this.selectedPublisher = ''
+        this.estimation = ''
+        this.mediaEditorMode = false
         let data2 = {
           dialog: false
         }

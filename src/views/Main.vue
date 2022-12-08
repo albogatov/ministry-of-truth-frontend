@@ -1,5 +1,5 @@
 <template>
-  <v-row >
+  <v-row>
     <v-col cols="2">
       <LeftNavigationBar @switchSection="switchSection"/>
     </v-col>
@@ -13,6 +13,7 @@
 <script>
 import LeftNavigationBar from "@/components/mainPage/LeftNavigationBar";
 import MainComponent from "@/components/mainPage/MainComponent";
+
 export default {
   name: "Main",
   components: {LeftNavigationBar, MainComponent},

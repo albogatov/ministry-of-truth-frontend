@@ -37,7 +37,8 @@
               style="border-radius: 10px;"
           />
 
-          <v-select :rules="rules.clearFieldValid" v-model="newDeviceType" id="newMediaState" :items="deviceTypes" label="Choose type">
+          <v-select :rules="rules.clearFieldValid" v-model="newDeviceType" id="newMediaState" :items="deviceTypes"
+                    label="Choose type">
           </v-select>
 
           <v-date-picker
@@ -46,7 +47,8 @@
               class="mt-4"
           ></v-date-picker>
 
-          <v-select :rules="rules.clearFieldValid" v-model="selectedEmployee" id="employeeList" :items="employees" label="Choose maintainer"
+          <v-select :rules="rules.clearFieldValid" v-model="selectedEmployee" id="employeeList" :items="employees"
+                    label="Choose maintainer"
                     :item-text="'name'" :item-value="'id'">
             <option v-for="cat in employees" v-bind:key="cat.id" v-bind:value="cat.name">
               {{ cat.name }}
@@ -104,7 +106,8 @@
                   </v-card-title>
                   <v-card-text>
                     <v-container>
-                      <v-select :readonly=true v-model="selectedDevice.type" id="deviceType" :items="deviceTypes" label="Type">
+                      <v-select :readonly=true v-model="selectedDevice.type" id="deviceType" :items="deviceTypes"
+                                label="Type">
                       </v-select>
 
                       <v-text-field
@@ -122,7 +125,8 @@
                       />
 
 
-                      <v-select v-model="selectedDevice.maintainerId" id="employeeList" :items="employees" label="Maintainer"
+                      <v-select v-model="selectedDevice.maintainerId" id="employeeList" :items="employees"
+                                label="Maintainer"
                                 :item-text="'name'" :item-value="'id'">
                         <option v-for="cat in employees" v-bind:key="cat.id" v-bind:value="cat.name">
                           {{ cat.name }}
@@ -211,7 +215,7 @@
         </v-list>
         <v-dialog v-model="alertTrue">
           <v-alert>
-            {{this.alertMessage}}
+            {{ this.alertMessage }}
           </v-alert>
         </v-dialog>
       </v-card>
@@ -362,13 +366,15 @@ export default {
         ).post(str, data)
             .then(resp => {
 
-              if(resp.data.cause == undefined)
+              if (resp.data.cause == undefined)
                 this.deviceEditorMode = false;
               else {
                 this.alertMessage = resp.data.cause.serverErrorMessage.message
                 this.alertTrue = true
-                setTimeout(() => {this.alertTrue = false
-                  console.log("hide alert after 3 seconds");}, 10000)
+                setTimeout(() => {
+                  this.alertTrue = false
+                  console.log("hide alert after 3 seconds");
+                }, 10000)
               }
             }).catch(err => {
           if (this.doRefresh(err.response.status)) this.submit()
@@ -398,13 +404,15 @@ export default {
         axios.create(this.getHeader()
         ).post(str, data)
             .then(resp => {
-              if(resp.data.cause == undefined)
+              if (resp.data.cause == undefined)
                 console.log("all good")
               else {
                 this.alertMessage = resp.data.cause.serverErrorMessage.message
                 this.alertTrue = true
-                setTimeout(() => {this.alertTrue = false
-                  console.log("hide alert after 3 seconds");}, 10000)
+                setTimeout(() => {
+                  this.alertTrue = false
+                  console.log("hide alert after 3 seconds");
+                }, 10000)
               }
             }).catch(err => {
           if (this.doRefresh(err.response.status)) this.submit()
@@ -463,13 +471,15 @@ export default {
       ).post(str, data)
           .then(resp => {
             console.log("Server responded:" + resp.data)
-            if(resp.data.cause == undefined)
+            if (resp.data.cause == undefined)
               console.log("all good")
             else {
               this.alertMessage = resp.data.cause.serverErrorMessage.message
               this.alertTrue = true
-              setTimeout(() => {this.alertTrue = false
-                console.log("hide alert after 3 seconds");}, 10000)
+              setTimeout(() => {
+                this.alertTrue = false
+                console.log("hide alert after 3 seconds");
+              }, 10000)
             }
           }).catch(err => {
         if (this.doRefresh(err.response.status)) this.submit()

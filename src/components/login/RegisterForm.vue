@@ -35,8 +35,9 @@
               Age
             </div>
 
-            <v-textarea
+            <v-text-field
                 :rules="rules.clearFieldValid"
+                onkeypress="return event.charCode >= 48"
                 label="Enter Age"
                 name="Age"
                 type="number"
@@ -67,9 +68,11 @@
                 label="Married"
                 :color="changeColor()"
                 hide-details
+                style="margin-bottom: 5%"
             ></v-checkbox>
 
             <v-text-field
+                onkeypress="return event.charCode >= 48"
                 :rules="rules.clearFieldValid"
                 light
                 label="Number of children"

@@ -21,11 +21,17 @@
         </div>
 
         <div style="margin-top: 15%; margin-left: 30px; margin-right: 20px">
+          <v-text value="You are not assigned a position yet, please refer to your superior" v-if="!(accessLevel > 0)">
+            You are not assigned a position yet, please refer to your superior
+          </v-text>
+        </div>
+
+        <div style="margin-top: 15%; margin-left: 30px; margin-right: 20px" v-if="accessLevel > 0">
 
 
           <v-card width="600px" v-if="modeSwitch === true" elevation="12"
                   outlined
-                  >
+          >
             <template>
 
               <div>
@@ -102,8 +108,7 @@ import router from "@/router";
 export default {
   name: "LeftNavigationBar",
 
-  components: {
-  },
+  components: {},
   data: () => ({
     dialog: false,
     openWind: '',

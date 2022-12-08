@@ -210,7 +210,7 @@
         </v-list>
         <v-dialog v-model="alertTrue">
           <v-alert>
-            {{this.alertMessage}}
+            {{ this.alertMessage }}
           </v-alert>
         </v-dialog>
       </v-card>
@@ -357,20 +357,22 @@ export default {
         let str = "/api/app/case/save"
         let data = {
           assigneeId: this.selectedEmployee,
-                title: this.caseTitle,
-                description: this.description,
-                state: this.newCaseState
+          title: this.caseTitle,
+          description: this.description,
+          state: this.newCaseState
         }
         axios.create(this.getHeader()
         ).post(str, data)
             .then(resp => {
-              if(resp.data.cause == undefined)
+              if (resp.data.cause == undefined)
                 this.caseEditorMode = false;
               else {
                 this.alertMessage = resp.data.cause.serverErrorMessage.message
                 this.alertTrue = true
-                setTimeout(() => {this.alertTrue = false
-                  console.log("hide alert after 3 seconds");}, 10000)
+                setTimeout(() => {
+                  this.alertTrue = false
+                  console.log("hide alert after 3 seconds");
+                }, 10000)
               }
             }).catch(err => {
           if (this.doRefresh(err.response.status)) this.submit()
@@ -395,13 +397,15 @@ export default {
       axios.create(this.getHeader()
       ).post(str, data)
           .then(resp => {
-            if(resp.data.cause == undefined)
+            if (resp.data.cause == undefined)
               console.log("all good")
             else {
               this.alertMessage = resp.data.cause.serverErrorMessage.message
               this.alertTrue = true
-              setTimeout(() => {this.alertTrue = false
-                console.log("hide alert after 3 seconds");}, 10000)
+              setTimeout(() => {
+                this.alertTrue = false
+                console.log("hide alert after 3 seconds");
+              }, 10000)
             }
           }).catch(err => {
         if (this.doRefresh(err.response.status)) this.submit()
@@ -422,18 +426,21 @@ export default {
           mediaId: mmedia,
           caseId: mcase.id
         }
-        console.log("CaseMedia:" + mcase)
+        console.log("CaseMedia:")
+        console.log(data)
         axios.create(this.getHeader()
         ).post(str, data)
             .then(resp => {
               console.log(resp.data)
-              if(resp.data.cause == undefined)
+              if (resp.data.cause == undefined)
                 console.log("all good")
               else {
                 this.alertMessage = resp.data.cause.serverErrorMessage.message
                 this.alertTrue = true
-                setTimeout(() => {this.alertTrue = false
-                  console.log("hide alert after 3 seconds");}, 10000)
+                setTimeout(() => {
+                  this.alertTrue = false
+                  console.log("hide alert after 3 seconds");
+                }, 10000)
               }
             }).catch(err => {
           if (this.doRefresh(err.response.status)) this.submit()

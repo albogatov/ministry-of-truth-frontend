@@ -20,7 +20,7 @@
         </v-btn>
 
         <v-card-text class="font-weight-medium" style="font-size: 15pt; "
-                     v-if="this.guidelineEditorMode && !this.isFetchingGuidelines && !this.isFetchingDepartments">
+                     v-if="this.guidelineEditorMode && !this.isFetchingDepartments">
           <div style="margin-top: 5px; margin-bottom: 20px; color: black; font-weight: lighter">
             Enter data for the guideline
           </div>
@@ -53,7 +53,8 @@
               style="border-radius: 10px;"
           />
 
-          <v-select  :rules="rules.clearFieldValid" v-model="guidelineDepartment" id="departmentList" :items="AllDepartments"
+          <v-select :rules="rules.clearFieldValid" v-model="guidelineDepartment" id="departmentList"
+                    :items="AllDepartments"
                     label="Choose department"
                     :item-text="'name'" :item-value="'id'">
             <option v-for="dep in AllDepartments" v-bind:key="dep.id" v-bind:value="dep.name">
@@ -61,7 +62,8 @@
             </option>
           </v-select>
 
-          <v-select  :rules="rules.clearFieldValid" v-model="selectedEmployee" id="emplList" :items="employees" label="Choose author"
+          <v-select :rules="rules.clearFieldValid" v-model="selectedEmployee" id="emplList" :items="employees"
+                    label="Choose author"
                     :item-text="'name'" :item-value="'id'">
             <option v-for="emp in employees" v-bind:key="emp.id" v-bind:value="emp.name">
               {{ emp.name }}
@@ -69,8 +71,8 @@
           </v-select>
 
           <v-date-picker :rules="rules.clearFieldValid"
-              v-model="releaseDate"
-              class="mt-4"
+                         v-model="releaseDate"
+                         class="mt-4"
           ></v-date-picker>
 
           <v-btn style="margin-left: 25%; margin-bottom: 5%"
@@ -160,8 +162,8 @@
                       </v-select>
 
                       <v-text-field :readonly=true
-                                     v-model="selectedGuideline.releaseDate"
-                                     class="mt-4"
+                                    v-model="selectedGuideline.releaseDate"
+                                    class="mt-4"
                       ></v-text-field>
 
                       <v-text-field

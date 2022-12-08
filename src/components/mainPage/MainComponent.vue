@@ -3,13 +3,21 @@
     <div v-show="false">
       <img src="../../assets/defaultMain.jpg" alt/>
     </div>
-    <CaseSection v-if="this.$parent.currentSection === 'CaseSection'"  @switchSectionToMedia="switchSectionToMedia" ref="caseComponent" @mounted="caseSectionMounted" />
-    <MediaSection v-if="this.$parent.currentSection === 'MediaSection'" @switchSectionToPublisher="switchSectionToPublisher" @switchSectionToCase="switchSectionToCase" @mounted="mediaSectionMounted" ref="mediaComponent"/>
-    <PublisherSection v-if="this.$parent.currentSection === 'PublisherSection'" @switchSectionToMedia="switchSectionToMedia" @mounted="publisherSectionMounted" ref="publisherComponent"/>
-    <DepartmentSection v-if="this.$parent.currentSection === 'DepartmentSection'" @switchSectionToMedia="switchSectionToMedia" @mounted="publisherSectionMounted" ref="publisherComponent"/>
+    <CaseSection v-if="this.$parent.currentSection === 'CaseSection'" @switchSectionToMedia="switchSectionToMedia"
+                 ref="caseComponent" @mounted="caseSectionMounted"/>
+    <MediaSection v-if="this.$parent.currentSection === 'MediaSection'"
+                  @switchSectionToPublisher="switchSectionToPublisher" @switchSectionToCase="switchSectionToCase"
+                  @mounted="mediaSectionMounted" ref="mediaComponent"/>
+    <PublisherSection v-if="this.$parent.currentSection === 'PublisherSection'"
+                      @switchSectionToMedia="switchSectionToMedia" @mounted="publisherSectionMounted"
+                      ref="publisherComponent"/>
+    <DepartmentSection v-if="this.$parent.currentSection === 'DepartmentSection'"
+                       @switchSectionToMedia="switchSectionToMedia" @mounted="publisherSectionMounted"
+                       ref="publisherComponent"/>
     <EmployeeSection v-if="this.$parent.currentSection === 'EmployeeSection'" ref="employeeComponent"/>
     <GuidelineSection v-if="this.$parent.currentSection === 'GuidelineSection'" ref="guidelineComponent"/>
-    <DeviceSection v-if="this.$parent.currentSection === 'DeviceSection'" @switchSectionToCase="switchSectionToCase" ref="deviceComponent"/>
+    <DeviceSection v-if="this.$parent.currentSection === 'DeviceSection'" @switchSectionToCase="switchSectionToCase"
+                   ref="deviceComponent"/>
 
     <v-img :src=getSrc()
            class="ml-auto mr-auto"
@@ -32,7 +40,15 @@ import DeviceSection from "@/components/mainPage/sections/DeviceSection";
 
 export default {
   name: "MainComponent",
-  components: {DepartmentSection, CaseSection, MediaSection, PublisherSection, EmployeeSection, GuidelineSection, DeviceSection},
+  components: {
+    DepartmentSection,
+    CaseSection,
+    MediaSection,
+    PublisherSection,
+    EmployeeSection,
+    GuidelineSection,
+    DeviceSection
+  },
 
   data: () => ({
     caseSectionReady: false,

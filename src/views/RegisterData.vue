@@ -1,6 +1,6 @@
 <template>
   <v-row>
-    <v-col md="4" >
+    <v-col md="4">
       <LeftPanelAuth/>
     </v-col>
     <v-col>

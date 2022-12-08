@@ -75,6 +75,7 @@
                               label="Married"
                               :color="changeColor()"
                               hide-details
+                              style="margin-bottom: 5%"
                           ></v-checkbox>
 
                           <v-text-field

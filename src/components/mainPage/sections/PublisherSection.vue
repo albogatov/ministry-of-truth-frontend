@@ -57,7 +57,6 @@
               v-model="registrationCode"
               name="registrationCode"
               type="text"
-              :rules="rules.clearFieldValid"
               :color=changeColor()
               background-color=#EDF2F7
               outlined
@@ -70,18 +69,20 @@
               v-model="representative"
               name="Representative"
               type="text"
-              :rules="rules.clearFieldValid"
               :color=changeColor()
               background-color=#EDF2F7
               outlined
               style="border-radius: 10px;"
           />
 
-          <v-date-picker
-              label="Foundation date"
-              v-model="foundationDate"
-              class="mt-4"
-          ></v-date-picker>
+          <v-text value="Pick foundation date">
+            Pick foundation date
+            <v-date-picker
+                label="Foundation date"
+                v-model="foundationDate"
+                class="mt-4"
+            ></v-date-picker>
+          </v-text>
 
           <v-btn style="margin-left: 25%; margin-bottom: 5%"
                  :color=changeColor()
@@ -167,7 +168,6 @@
                           v-model="selectedPublisher.registrationCode"
                           name="registrationCode"
                           type="text"
-                          :rules="rules.clearFieldValid"
                           :color=changeColor()
                           background-color=#EDF2F7
                           outlined
@@ -180,7 +180,6 @@
                           v-model="selectedPublisher.representative"
                           name="Representative"
                           type="text"
-                          :rules="rules.clearFieldValid"
                           :color=changeColor()
                           background-color=#EDF2F7
                           outlined
@@ -291,8 +290,7 @@ export default {
   methods: {
 
     receiveRouteToObject(obj) {
-      // while(this.isFetchingCases)
-       console.log(obj)
+      console.log(obj)
       this.selectedPublisher = obj
       this.dialog = true
     },
@@ -407,11 +405,10 @@ export default {
     },
 
     openPublisher(object) {
-      console.log("CLICK BUTTON WORKED")
       this.caseViewMode = true
       this.selectedPublisher = object
       this.object = object
-      console.log("opening case" + object.id)
+      console.log(this.selectedPublisher)
       this.getListOfMediaForPublisher()
       this.dialog = true
     },
@@ -428,7 +425,7 @@ export default {
   beforeMount() {
     this.getListOfPublishers()
   },
-  mounted: function() {
+  mounted: function () {
     this.$emit("mounted");
   }
 }
