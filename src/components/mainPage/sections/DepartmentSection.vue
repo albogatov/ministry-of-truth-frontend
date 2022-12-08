@@ -333,9 +333,8 @@ export default {
     loadingRemove: false,
     loadingSave: false,
     departmentEditorMode: false,
-    caseViewMode: false,
+    departmentViewMode: false,
     newDepartmentState: 'Active',
-    absolute: true,
     valid: true,
     removeButton: true,
     AllDepartments: [],
@@ -386,7 +385,6 @@ export default {
   methods: {
 
     receiveRouteToObject(obj) {
-      // while(this.isFetchingCases)
       console.log(obj)
       this.selectedDepartment = obj
       this.dialog = true
@@ -397,10 +395,6 @@ export default {
       axios.get(str, this.getHeader())
           .then(resp => {
             for (let i = 0; i < resp.data.length; i++) {
-              // this.object = {
-              //   "id": resp.data[i].id,
-              //   "name": resp.data[i].name
-              // }
               this.categories.push(resp.data[i])
             }
 
@@ -414,28 +408,7 @@ export default {
       axios.get(str, this.getHeader())
           .then(resp => {
             for (let i = 0; i < resp.data.length; i++) {
-              // this.object = {
-              //   "id": resp.data[i].id,
-              //   "name": resp.data[i].name
-              // }
               this.designations.push(resp.data[i])
-            }
-
-          }).catch(err => {
-        console.log(err)
-      })
-    },
-
-    getEmployees() {
-      let str = "/api/app/employee/all"
-      axios.get(str, this.getHeader())
-          .then(resp => {
-            for (let i = 0; i < resp.data.length; i++) {
-              this.object = {
-                "id": resp.data[i].id,
-                "name": resp.data[i].name
-              }
-              this.employees.push(resp.data[i])
             }
 
           }).catch(err => {
@@ -449,11 +422,8 @@ export default {
       axios.create(this.getHeader()
       ).get(str)
           .then(resp => {
-            console.log(resp.data)
             this.AllDepartments = []
             for (let i = 0; i < resp.data.length; i++) {
-              //this.Case.push('Case-' + resp.data[i].id + ":" + resp.data[i].title)
-              //this.AllDepartments.push(resp.data[i])
               Vue.set(this.AllDepartments, i, resp.data[i])
               console.log(this.AllDepartments[i])
               this.isFetchingDepartments = false
@@ -463,7 +433,6 @@ export default {
         console.log(err)
         if (this.doRefresh(err.response.status)) this.getListOfDepartments()
       })
-      Vue.$nextTick
 
     },
 
@@ -505,7 +474,6 @@ export default {
       axios.create(this.getHeader()
       ).post(str, data)
           .then(resp => {
-            console.log(resp.data)
             this.departmentTargetReached = resp.data;
           }).catch(err => {
         console.log(err)
@@ -515,8 +483,6 @@ export default {
 
     getListOfMediaForPublisher() {
       let str = "/api/app/media/publisher"
-
-      console.log("HMMM" + this.selectedDepartment)
       axios.create(this.getHeader()).post(str, this.selectedDepartment).then(resp => {
         console.log(resp.data)
         this.chosenPublisherMedia = []
@@ -541,22 +507,14 @@ export default {
           mediaCategoryId: this.selectedCategory,
           designationId: this.selectedDesignation
         }
-        console.log(data)
         axios.create(this.getHeader()
         ).post(str, data)
             .then(resp => {
-              console.log(resp.data)
-              console.log(resp.data.cause.serverErrorMessage.message)
               if (resp.data.cause == undefined)
                 this.departmentEditorMode = false;
-              //this.mediaEditorMode = false;
               else {
                 this.alertMessage = resp.data.cause.serverErrorMessage.message
                 this.alertTrue = true
-                // this.setInterval(() => {
-                //   this.alertTrue = false
-                //   console.log("hide alert after 3 seconds");
-                // }, 5000)
                 setTimeout(() => {
                   this.alertTrue = false
                   console.log("hide alert after 3 seconds");
@@ -581,22 +539,14 @@ export default {
 
       this.loadingSave = true
       let str = "/api/app/department/save"
-      console.log(this.selectedDepartment)
-      console.log("We sent to save:" + data)
       axios.create(this.getHeader()
       ).post(str, data)
           .then(resp => {
             if (resp.data.cause == undefined)
               console.log("all good")
-                //this.departmentEditorMode = false;
-            //this.mediaEditorMode = false;
             else {
               this.alertMessage = resp.data.cause.serverErrorMessage.message
               this.alertTrue = true
-              // this.setInterval(() => {
-              //   this.alertTrue = false
-              //   console.log("hide alert after 3 seconds");
-              // }, 5000)
               setTimeout(() => {
                 this.alertTrue = false
                 console.log("hide alert after 3 seconds");
@@ -610,7 +560,6 @@ export default {
 
 
       this.dialog = false
-      //this.$emit('updateParent', {data2})
       this.loadingSave = false
 
     },
@@ -620,35 +569,16 @@ export default {
     },
 
     openDepartment(object) {
-      console.log("CLICK BUTTON WORKED")
-      this.caseViewMode = true
+      this.departmentViewMode = true
       this.selectedDepartment = object
       this.selectedDepCategoryValue = object.mediaCategory.name
       this.selectedDepDesignationValue = object.designation.name
       this.object = object
-      console.log("opening case" + object.id)
-      console.log(object)
-      //this.getListOfMediaForPublisher()
-      //this.getListOfMediaProducts()
       this.dialog = true
     },
 
-    updateElements(CaseList) {
-      if (CaseList !== this.Case[0]) {
-        CaseList = CaseList.split(" ").pop()
-        //this.getCaseByID(CaseList)
-        this.removeButton = false
-      } else if (CaseList === this.Case[0]) {
-        this.CaseMedia = ''
-        this.removeButton = true
-      }
-    },
-
     updateOverlay() {
-      // this.Case = ['Добавить новый элемент']
-      // this.CaseList = this.Case[0]
       this.getListOfDepartments()
-      //this.updateElements(this.CaseList)
     },
 
     changeColor() {

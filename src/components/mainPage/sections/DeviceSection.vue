@@ -237,28 +237,20 @@ export default {
     loadingRemove: false,
     loadingSave: false,
     deviceEditorMode: false,
-    caseViewMode: false,
+    deviceViewMode: false,
     newDeviceType: 'Discovered',
-    absolute: true,
     valid: true,
     removeButton: true,
     AllDevices: [],
-    CaseList: '',
-    CaseMedia: '',
     deviceModel: '',
-    estimation: '',
     object: '',
     selectedDevice: [],
     chosenDeviceCase: [],
     isFetchingDevices: true,
     isFetchingCase: true,
-    isFetchingPublishers: true,
     AllCases: [],
     linkToCase: false,
     mcase: [],
-    selectedPublisher: [],
-    publishers: [],
-    selectedMediaPublisher: null,
     newDateMade: '',
     alertTrue: false,
     alertMessage: '',
@@ -355,31 +347,6 @@ export default {
       })
     },
 
-    getListOfPublishers() {
-      let str = "/api/app/publisher/all"
-
-      axios.create(this.getHeader()
-      ).get(str)
-          .then(resp => {
-            console.log(resp.data)
-            for (let i = 0; i < resp.data.length; i++) {
-              //this.Case.push('Case-' + resp.data[i].id + ":" + resp.data[i].title)
-              this.publishers.push(resp.data[i])
-              console.log(this.publishers[i])
-              //this.isFetchingPublishers = false
-            }
-          }).catch(err => {
-        console.log(err)
-        if (this.doRefresh(err.response.status)) this.getListOfPublishers()
-      })
-    },
-
-    isStillFetchingPublishers() {
-      if(this.selectedDevice.publisher.name == null)
-        this.isFetchingPublishers = true;
-      else this.isFetchingPublishers = false;
-    },
-
     async submitDevice() {
       if (this.$refs.form.validate()) {
         this.loadingSave = true
@@ -391,22 +358,15 @@ export default {
           type: this.newDeviceType,
           dateMade: this.newDateMade
         }
-        console.log(data)
         axios.create(this.getHeader()
         ).post(str, data)
             .then(resp => {
-              console.log(resp.data)
 
               if(resp.data.cause == undefined)
                 this.deviceEditorMode = false;
-              //this.mediaEditorMode = false;
               else {
                 this.alertMessage = resp.data.cause.serverErrorMessage.message
                 this.alertTrue = true
-                // this.setInterval(() => {
-                //   this.alertTrue = false
-                //   console.log("hide alert after 3 seconds");
-                // }, 5000)
                 setTimeout(() => {this.alertTrue = false
                   console.log("hide alert after 3 seconds");}, 10000)
               }
@@ -430,7 +390,6 @@ export default {
       if (this.$refs.form.validate()) {
         this.loadingSave = true
         let str = "/api/app/caseDevice/save"
-        //console.log(this.selectedCategory)
         let data = {
           deviceId: device.id,
           caseId: mcase
@@ -441,19 +400,12 @@ export default {
             .then(resp => {
               if(resp.data.cause == undefined)
                 console.log("all good")
-                //this.deviceEditorMode = false;
-              //this.mediaEditorMode = false;
               else {
                 this.alertMessage = resp.data.cause.serverErrorMessage.message
                 this.alertTrue = true
-                // this.setInterval(() => {
-                //   this.alertTrue = false
-                //   console.log("hide alert after 3 seconds");
-                // }, 5000)
                 setTimeout(() => {this.alertTrue = false
                   console.log("hide alert after 3 seconds");}, 10000)
               }
-              //this.mediaEditorMode = false;
             }).catch(err => {
           if (this.doRefresh(err.response.status)) this.submit()
         })
@@ -473,7 +425,6 @@ export default {
       if (this.$refs.form.validate()) {
         this.loadingSave = true
         let str = "/api/app/caseDevice/delete"
-        //console.log(this.selectedCategory)
         let data = {
           mediaId: this.selectedDevice.id,
           caseId: mcase.id
@@ -483,7 +434,6 @@ export default {
         ).post(str, data)
             .then(resp => {
               console.log(resp.data)
-              //this.mediaEditorMode = false;
             }).catch(err => {
           if (this.doRefresh(err.response.status)) this.submit()
         })
@@ -503,10 +453,6 @@ export default {
       this.$emit('switchSectionToCase', 'CaseSection', mcase)
     },
 
-    openPublisher(publisher) {
-      this.$emit('switchSectionToPublisher', 'PublisherSection', publisher)
-    },
-
     async updateDevice(data) {
 
       this.loadingSave = true
@@ -519,15 +465,9 @@ export default {
             console.log("Server responded:" + resp.data)
             if(resp.data.cause == undefined)
               console.log("all good")
-                //this.deviceEditorMode = false;
-            //this.mediaEditorMode = false;
             else {
               this.alertMessage = resp.data.cause.serverErrorMessage.message
               this.alertTrue = true
-              // this.setInterval(() => {
-              //   this.alertTrue = false
-              //   console.log("hide alert after 3 seconds");
-              // }, 5000)
               setTimeout(() => {this.alertTrue = false
                 console.log("hide alert after 3 seconds");}, 10000)
             }
@@ -538,40 +478,19 @@ export default {
       this.updateOverlay()
 
       this.dialog = false
-      //this.$emit('updateParent', {data2})
       this.loadingSave = false
 
     },
 
     openDevice(object) {
-      this.caseViewMode = true
+      this.deviceViewMode = true
       this.selectedDevice = object
-      console.log("Opened media")
-      console.log(object)
       this.getListOfCasesForDevice()
-      console.log("Selected media")
-      console.log(this.selectedDevice)
-      //this.selectedMediaPublisher = object.publisher
-      //this.isStillFetchingPublishers()
       this.dialog = true
     },
 
-    updateElements(CaseList) {
-      if (CaseList !== this.Media[0]) {
-        CaseList = CaseList.split(" ").pop()
-        //this.getCaseByID(CaseList)
-        this.removeButton = false
-      } else if (CaseList === this.Media[0]) {
-        this.CaseMedia = ''
-        this.removeButton = true
-      }
-    },
-
     updateOverlay() {
-      // this.Case = ['Добавить новый элемент']
-      // this.CaseList = this.Case[0]
       this.getListOfDevices()
-      //this.updateElements(this.CaseList)
     },
 
     changeColor() {
@@ -579,14 +498,11 @@ export default {
     },
   },
   beforeMount() {
-    //this.updateOverlay()
-    this.getListOfPublishers()
     this.getEmployees()
     this.getListOfDevices()
     this.getListOfCases()
   },
   mounted: function () {
-    console.log("YEEEEEEAAAA")
     this.$emit("mounted")
   }
 }

@@ -16,19 +16,11 @@
           <pre>Ministry<br>Of<br>Truth</pre>
         </v-btn>
 
-        <div style="text-align: center; font-size: 20px; margin-top: 5%;">
+        <div style="text-align: center; font-size: 20px; margin-top: 5%; margin-left: 5%;">
           {{ this.login }}
         </div>
 
         <div style="margin-top: 15%; margin-left: 30px; margin-right: 20px">
-<!--          <v-divider></v-divider>-->
-<!--          <v-switch-->
-<!--              v-model="modeSwitch"-->
-<!--              inset-->
-<!--              :label="modeSwitch ? 'Элементы' : 'Функции'"-->
-<!--              :color=changeColor()-->
-<!--              style="margin-left: 14%"-->
-<!--          ></v-switch>-->
 
 
           <v-card width="600px" v-if="modeSwitch === true" elevation="12"
@@ -83,13 +75,6 @@
         </div>
 
         <template v-slot:append>
-<!--          <v-slider style="width: 200px; margin-left: 17%"-->
-<!--              :color=changeColor()-->
-<!--              v-model="colorSlider"-->
-<!--              max="4"-->
-<!--              min="1"-->
-<!--              v-on:change="switchColors(colorSlider)"-->
-<!--          ></v-slider>-->
           <v-divider style="margin-bottom: 20px"></v-divider>
           <v-row style="margin: auto">
             <v-btn dark

@@ -205,18 +205,6 @@
                     </v-container>
                   </v-card-text>
 
-                  <!--                      <v-list class="overflow-y-auto" max-height="400" v-for="media in chosenCaseMedia"-->
-                  <!--                              :key="media.id">-->
-                  <!--                        <v-list-tile-content>-->
-                  <!--                          <v-list-tile-title v-text="media.title"></v-list-tile-title>-->
-                  <!--                        </v-list-tile-content>-->
-
-                  <!--                        <v-btn icon>-->
-                  <!--                          <v-icon>edit</v-icon>-->
-                  <!--                        </v-btn>-->
-                  <!--                      </v-list>-->
-                  <!--                    </v-container>-->
-                  <!--                  </v-card-text>-->
                   <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn
@@ -335,7 +323,6 @@ export default {
             console.log(resp.data)
             this.AllPublishers = []
             for (let i = 0; i < resp.data.length; i++) {
-              //this.Case.push('Case-' + resp.data[i].id + ":" + resp.data[i].title)
               this.AllPublishers.push(resp.data[i])
               console.log(this.AllPublishers[i])
               this.isFetchingPublishers = false
@@ -411,7 +398,6 @@ export default {
       this.updateOverlay()
 
       this.dialog = false
-      //this.$emit('updateParent', {data2})
       this.loadingSave = false
 
     },
@@ -427,26 +413,12 @@ export default {
       this.object = object
       console.log("opening case" + object.id)
       this.getListOfMediaForPublisher()
-      //this.getListOfMediaProducts()
       this.dialog = true
     },
 
-    updateElements(CaseList) {
-      if (CaseList !== this.Case[0]) {
-        CaseList = CaseList.split(" ").pop()
-        //this.getCaseByID(CaseList)
-        this.removeButton = false
-      } else if (CaseList === this.Case[0]) {
-        this.CaseMedia = ''
-        this.removeButton = true
-      }
-    },
 
     updateOverlay() {
-      // this.Case = ['Добавить новый элемент']
-      // this.CaseList = this.Case[0]
       this.getListOfPublishers()
-      //this.updateElements(this.CaseList)
     },
 
     changeColor() {
@@ -454,11 +426,9 @@ export default {
     },
   },
   beforeMount() {
-    //this.updateOverlay()
     this.getListOfPublishers()
   },
   mounted: function() {
-    console.log("YEEEEEEAAAA")
     this.$emit("mounted");
   }
 }

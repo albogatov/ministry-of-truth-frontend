@@ -136,8 +136,6 @@ export default {
           login: this.login,
           password: this.password
         }
-        console.log(data)
-        console.log("auth")
         axios.create({
           baseURL: this.hostname
         }).post('/api/auth/login', data)
@@ -146,7 +144,6 @@ export default {
               localStorage.refreshToken = resp.data.refreshToken
               localStorage.login = this.login
               localStorage.accessLevel = resp.data.accessLevel
-              console.log(resp.data);
               await new Promise(resolve => setTimeout(resolve, this.awaitTimer))
               await router.push({path: '/main'})
               this.loadingLogin = false

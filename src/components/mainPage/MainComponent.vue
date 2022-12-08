@@ -11,18 +11,11 @@
     <GuidelineSection v-if="this.$parent.currentSection === 'GuidelineSection'" ref="guidelineComponent"/>
     <DeviceSection v-if="this.$parent.currentSection === 'DeviceSection'" @switchSectionToCase="switchSectionToCase" ref="deviceComponent"/>
 
-
-
     <v-img :src=getSrc()
            class="ml-auto mr-auto"
            height="850px"
            style="border-radius: 10px" v-if="this.$parent.currentSection === ''"
     >
-<!--      <v-btn disabled v-if="!renderComponent" height="100px" plain-->
-<!--             style="margin-top: 22%; color: black; font-size: 40px; font-weight: bold; text-align: center; margin-left: 23%"-->
-<!--      >-->
-<!--        <pre>Server is currently under attack</pre>-->
-<!--      </v-btn>-->
 
     </v-img>
   </v-container>
@@ -36,7 +29,6 @@ import DepartmentSection from "@/components/mainPage/sections/DepartmentSection"
 import EmployeeSection from "@/components/mainPage/sections/EmployeeSection";
 import GuidelineSection from "@/components/mainPage/sections/GuidelineSection";
 import DeviceSection from "@/components/mainPage/sections/DeviceSection";
-// import axios from "axios";
 
 export default {
   name: "MainComponent",
@@ -47,9 +39,7 @@ export default {
     caseSectionPredefined: null,
     mediaSectionPredefined: null,
     publisherSectionPredefined: null,
-    slotSize: 28,
     renderComponent: false,
-    mapPath: '',
     currentSection: ''
   }),
 
@@ -90,7 +80,6 @@ export default {
 
     updateDialog() {
       this.renderComponent = false
-      this.getListOfKvartals()
     },
 
     changeColor() {
@@ -98,7 +87,6 @@ export default {
     },
 
     getSrc() {
-      console.log("Достаю картинку")
       let mode = this.$store.getters.getPrimaryColor
       console.log(mode)
       switch (mode) {
@@ -114,7 +102,6 @@ export default {
     },
   },
   created() {
-    // this.getListOfKvartals()
   },
 }
 </script>

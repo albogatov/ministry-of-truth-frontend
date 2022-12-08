@@ -11,11 +11,10 @@
 
 <script>
 import LeftPanelAuth from "../components/login/LeftPanelAuth";
-import FinishRegisterForm from "@/components/login/FinishRegisterForm";
 
 export default {
   name: "RegisterData",
-  components: {FinishRegisterForm, LeftPanelAuth}
+  components: {LeftPanelAuth}
 }
 </script>
 

@@ -52,17 +52,20 @@
               style="border-radius: 10px;"
           />
 
-          <v-select  :rules="rules.clearFieldValid" v-model="selectedCategory" id="categoryList" :items="categories" label="Choose media category"
+          <v-select :rules="rules.clearFieldValid" v-model="selectedCategory" id="categoryList" :items="categories"
+                    label="Choose media category"
                     :item-text="'name'" :item-value="'id'">
             <option v-for="cat in categories" v-bind:key="cat.id" v-bind:value="cat.name">
               {{ cat.name }}
             </option>
           </v-select>
 
-          <v-select  :rules="rules.clearFieldValid" v-model="newMediaState" id="newMediaState" :items="mediaStates" label="Choose state">
+          <v-select :rules="rules.clearFieldValid" v-model="newMediaState" id="newMediaState" :items="mediaStates"
+                    label="Choose state">
           </v-select>
 
-          <v-select  :rules="rules.clearFieldValid" v-model="selectedPublisher" id="publisherList" :items="publishers" label="Choose publisher"
+          <v-select :rules="rules.clearFieldValid" v-model="selectedPublisher" id="publisherList" :items="publishers"
+                    label="Choose publisher"
                     :item-text="'name'" :item-value="'id'">
             <option v-for="cat in publishers" v-bind:key="cat.id" v-bind:value="cat.name">
               {{ cat.name }}
@@ -89,7 +92,6 @@
       <v-card>
         <v-list dense>
           <v-list-item-group
-
               color="primary"
           >
             <v-list v-for="object in AllMedia" :key="object.id">
@@ -134,7 +136,8 @@
                           max="40"
                           style="border-radius: 10px;"
                       />
-                      <v-select :readonly="true" v-model="selectedMedia.mediaCategoryId" id="categoryList" :items="categories"
+                      <v-select :readonly="true" v-model="selectedMedia.mediaCategoryId" id="categoryList"
+                                :items="categories"
                                 label="Choose category"
                                 :item-text="'name'" :item-value="'id'">
                         <option v-for="cat in categories" v-bind:key="cat.id" v-bind:value="cat.name">
@@ -235,7 +238,7 @@
         </v-list>
         <v-dialog v-model="alertTrue">
           <v-alert>
-            {{this.alertMessage}}
+            {{ this.alertMessage }}
           </v-alert>
         </v-dialog>
       </v-card>
@@ -413,13 +416,15 @@ export default {
             .then(resp => {
               console.log(resp)
               console.log(resp.data.cause.serverErrorMessage.message)
-              if(resp.data.cause == undefined)
+              if (resp.data.cause == undefined)
                 this.mediaEditorMode = false;
               else {
                 this.alertMessage = resp.data.cause.serverErrorMessage.message
                 this.alertTrue = true
-                setTimeout(() => {this.alertTrue = false
-                    console.log("hide alert after 3 seconds");}, 10000)
+                setTimeout(() => {
+                  this.alertTrue = false
+                  console.log("hide alert after 3 seconds");
+                }, 10000)
               }
             }).catch(err => {
           if (this.doRefresh(err.response.status)) this.submit()
@@ -448,13 +453,15 @@ export default {
         axios.create(this.getHeader()
         ).post(str, data)
             .then(resp => {
-              if(resp.data.cause == undefined)
+              if (resp.data.cause == undefined)
                 console.log("all good")
               else {
                 this.alertMessage = resp.data.cause.serverErrorMessage.message
                 this.alertTrue = true
-                setTimeout(() => {this.alertTrue = false
-                  console.log("hide alert after 3 seconds");}, 10000)
+                setTimeout(() => {
+                  this.alertTrue = false
+                  console.log("hide alert after 3 seconds");
+                }, 10000)
               }
             }).catch(err => {
           if (this.doRefresh(err.response.status)) this.submit()
@@ -515,13 +522,15 @@ export default {
       axios.create(this.getHeader()
       ).post(str, data)
           .then(resp => {
-            if(resp.data.cause == undefined)
+            if (resp.data.cause == undefined)
               console.log("All good")
             else {
               this.alertMessage = resp.data.cause.serverErrorMessage.message
               this.alertTrue = true
-              setTimeout(() => {this.alertTrue = false
-                console.log("hide alert after 3 seconds");}, 10000)
+              setTimeout(() => {
+                this.alertTrue = false
+                console.log("hide alert after 3 seconds");
+              }, 10000)
             }
             console.log("Server responded:" + resp.data)
           }).catch(err => {

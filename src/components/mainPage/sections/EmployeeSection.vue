@@ -46,17 +46,6 @@
                       </v-card-title>
                       <v-card-text>
                         <v-container>
-<!--                          <v-text-field-->
-<!--                              light-->
-<!--                              label="Name"-->
-<!--                              v-model="selectedEmployee.name"-->
-<!--                              name="Name"-->
-<!--                              :color=changeColor()-->
-<!--                              background-color=#EDF2F7-->
-<!--                              outlined-->
-<!--                              style="border-radius: 10px;"-->
-<!--                          ></v-text-field>-->
-
                           <v-text-field
                               :readonly="true"
                               light
@@ -175,47 +164,17 @@ export default {
     },
     dialog: false,
     employees: [],
-    departmentStates: ['Active', 'Suspended', 'Terminated'],
     selectedEmployee: '',
     loadingRemove: false,
     loadingSave: false,
-    departmentEditorMode: false,
-    caseViewMode: false,
-    newDepartmentState: 'Active',
-    absolute: true,
+    employeeViewMode: false,
     valid: true,
     removeButton: true,
     AllDepartments: [],
-    CaseList: '',
-    CaseMedia: '',
-    departmentName: '',
-    numberOfEmployees: '',
     object: '',
-    predefinedCase: null,
-    selectedDepartment: [],
-    chosenPublisherMedia: [],
     isFetchingDepartments: true,
     isFetchingEmployees: true,
-    isFetchingDesignations: true,
-    Media: [],
-    AllMedia: [],
-    linkToMedia: false,
-    mMedia: [],
-    registrationCode: '',
-    representative: '',
-    selectedCategory: "",
     positions: [],
-    designations: [],
-    selectedDesignation: '',
-    newDepartmentFoundationDate: new Date().toLocaleString(),
-    selectedName: '',
-    selectedAge: '',
-    selectedMarried: false,
-    selectedChildren: 0,
-    selectedAddress: '',
-    selectedNotes: '',
-
-    Case: [],
 
     rules: {
       clearFieldValid: [
@@ -228,23 +187,11 @@ export default {
     },
   }),
   methods: {
-
-    // receiveRouteToObject(obj) {
-    //   // while(this.isFetchingCases)
-    //   console.log(obj)
-    //   this.selectedE = obj
-    //   this.dialog = true
-    // },
-
     getPositions() {
       let str = "/api/app/position/all"
       axios.get(str, this.getHeader())
           .then(resp => {
             for (let i = 0; i < resp.data.length; i++) {
-              // this.object = {
-              //   "id": resp.data[i].id,
-              //   "name": resp.data[i].name
-              // }
               this.positions.push(resp.data[i])
             }
 
@@ -253,33 +200,12 @@ export default {
       })
     },
 
-    // getDesignations() {
-    //   let str = "/api/app/designation/all"
-    //   axios.get(str, this.getHeader())
-    //       .then(resp => {
-    //         for (let i = 0; i < resp.data.length; i++) {
-    //           // this.object = {
-    //           //   "id": resp.data[i].id,
-    //           //   "name": resp.data[i].name
-    //           // }
-    //           this.positions.push(resp.data[i])
-    //         }
-    //
-    //       }).catch(err => {
-    //     console.log(err)
-    //   })
-    // },
-
     getEmployees() {
       let str = "/api/app/employee/all"
       axios.get(str, this.getHeader())
           .then(resp => {
             this.employees = []
             for (let i = 0; i < resp.data.length; i++) {
-              // this.object = {
-              //   "id": resp.data[i].id,
-              //   "name": resp.data[i].name
-              // }
               this.employees.push(resp.data[i])
               console.log(this.employees[i])
             }
@@ -298,7 +224,6 @@ export default {
           .then(resp => {
             console.log(resp.data)
             for (let i = 0; i < resp.data.length; i++) {
-              //this.Case.push('Case-' + resp.data[i].id + ":" + resp.data[i].title)
               this.AllDepartments.push(resp.data[i])
               console.log(this.AllDepartments[i])
               this.isFetchingDepartments = false
@@ -309,54 +234,6 @@ export default {
         if (this.doRefresh(err.response.status)) this.getListOfDepartments()
       })
     },
-
-    // getListOfMediaForPublisher() {
-    //   let str = "/api/app/media/publisher"
-    //
-    //   console.log("HMMM" + this.selectedDepartment)
-    //   axios.create(this.getHeader()).post(str, this.selectedDepartment).then(resp => {
-    //     console.log(resp.data)
-    //     this.chosenPublisherMedia = []
-    //     for (let i = 0; i < resp.data.length; i++) {
-    //       this.chosenPublisherMedia.push(resp.data[i])
-    //       this.isFetchingMedia = false
-    //     }
-    //   }).catch(err => {
-    //     console.log(err)
-    //   })
-    // },
-
-
-    // async submitDepartment() {
-    //   if (this.$refs.form.validate()) {
-    //     this.loadingSave = true
-    //     let str = "/api/app/department/save"
-    //     console.log(this.selectedEmployee)
-    //     let data = {
-    //       assigneeId: this.selectedEmployee,
-    //       title: this.departmentName,
-    //       description: this.numberOfEmployees,
-    //       state: this.newCaseState
-    //     }
-    //     console.log(data)
-    //     axios.create(this.getHeader()
-    //     ).post(str, data)
-    //         .then(resp => {
-    //           console.log(resp.data)
-    //           this.departmentEditorMode = false;
-    //         }).catch(err => {
-    //       if (this.doRefresh(err.response.status)) this.submit()
-    //     })
-    //     await new Promise(resolve => setTimeout(resolve, this.awaitTimer))
-    //     this.updateOverlay()
-    //
-    //     let data2 = {
-    //       dialog: false
-    //     }
-    //     this.$emit('updateParent', {data2})
-    //     this.loadingSave = false
-    //   }
-    // },
 
     async updateEmployee(data) {
 
@@ -376,46 +253,20 @@ export default {
       this.updateOverlay()
 
       this.dialog = false
-      //this.$emit('updateParent', {data2})
       this.loadingSave = false
 
       console.log(this.selectedEmployee.position.accessLevel)
     },
 
-    // openLinkedMedia(media) {
-    //   this.$emit('switchSectionToMedia', 'MediaSection', media)
-    // },
-
     openEmployee(object) {
-      console.log("CLICK BUTTON WORKED")
-      this.caseViewMode = true
+      this.employeeViewMode = true
       this.selectedEmployee = object
-      // this.selectedDepCategoryValue = object.mediaCategory.name
-      // this.selectedDepDesignationValue = object.designation.name
       this.object = object
-      console.log(object)
-      console.log("opening case" + object.id)
-      console.log(this.AllDepartments)
-      //this.getListOfMediaProducts()
       this.dialog = true
     },
 
-    updateElements(CaseList) {
-      if (CaseList !== this.Case[0]) {
-        CaseList = CaseList.split(" ").pop()
-        //this.getCaseByID(CaseList)
-        this.removeButton = false
-      } else if (CaseList === this.Case[0]) {
-        this.CaseMedia = ''
-        this.removeButton = true
-      }
-    },
-
     updateOverlay() {
-      // this.Case = ['Добавить новый элемент']
-      // this.CaseList = this.Case[0]
       this.getListOfDepartments()
-      //this.updateElements(this.CaseList)
     },
 
     changeColor() {
@@ -423,13 +274,11 @@ export default {
     },
   },
   beforeMount() {
-    //this.updateOverlay()
     this.getListOfDepartments()
     this.getPositions()
     this.getEmployees()
   },
   mounted: function () {
-    console.log("YEEEEEEAAAA")
     this.$emit("mounted");
   }
 }

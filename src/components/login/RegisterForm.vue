@@ -142,7 +142,7 @@
             />
 
             <div class="font-center" style="font-size: 14pt; margin-bottom: 10px; text-align: left">
-              Пароль
+              Password
             </div>
 
             <v-text-field
@@ -228,7 +228,6 @@ export default {
       ],
       passwordValid: [
         v => !!v || 'Field cannot be empty'
-        //v => !!/^\d{4,}$/.test(v) || 'Минимум 4 символа',
       ],
     },
   }),
@@ -236,7 +235,6 @@ export default {
   methods: {
     submit() {
       if (this.$refs.form.validate()) {
-        //this.loadingRegister = true
         let data = {
           name: this.name,
           age: this.age,
@@ -258,7 +256,6 @@ export default {
           employeeDto: this.employeeSet,
           employeeProfileDto: profile
         }
-        console.log(data.login)
         axios.create({
           baseURL: this.hostname
         }).post('/api/auth/register', data)
@@ -278,37 +275,6 @@ export default {
           console.log(err)
         })
       }
-      // submit() {
-      //   if (this.$refs.form.validate()) {
-      //     this.loadingRegister = true
-      //     let data = {
-      //       name: this.name,
-      //       age: this.age,
-      //       address: this.address,
-      //       married: this.married,
-      //       childrenAmount: this.numberOfChildren
-      //     }
-      //     console.log(data.name, data.age)
-      //     axios.create({
-      //       baseURL: this.hostname
-      //     }).post('/api/auth/startRegister', data)
-      //         .then(async resp => {
-      //           console.log(resp)
-      //           localStorage.userAccessLevel = resp.data.userAccessLevel
-      //           localStorage.lastCreatedEmployee = resp.data.id
-      //           await new Promise(resolve => setTimeout(resolve, 500))
-      //           await router.push({path: '/finishRegister'})
-      //           this.loadingRegister = false
-      //         }).catch(async err => {
-      //       this.loadingRegister = false
-      //       if (err.message === 'Network Error') {
-      //         this.errorNetwork = true
-      //       } else {
-      //         await new Promise(resolve => setTimeout(resolve, 500))
-      //         this.error = true
-      //       }
-      //     })
-      //   }
     },
 
     changeColor() {

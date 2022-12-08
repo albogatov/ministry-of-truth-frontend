@@ -354,38 +354,21 @@ export default {
     loadingRemove: false,
     loadingSave: false,
     guidelineEditorMode: false,
-    caseViewMode: false,
+    guidelineViewMode: false,
     newDepartmentState: 'Active',
-    absolute: true,
     valid: true,
     removeButton: true,
     AllGuidelines: [],
     AllDepartments: [],
-    CaseList: '',
-    CaseMedia: '',
     guidelineName: '',
     numberOfEmployees: '',
     object: '',
-    predefinedCase: null,
     selectedGuideline: [],
     RulesGuideline: [],
     isFetchingGuidelines: true,
-    isFetchingCategories: true,
     isFetchingDepartments: true,
-    Media: [],
-    AllMedia: [],
-    linkToMedia: false,
-    mMedia: [],
-    registrationCode: '',
-    representative: '',
-    selectedCategory: "",
-    categories: [],
-    designations: [],
-    selectedDesignation: '',
     releaseDate: null,
-    selectedDepDesignationValue: '',
     selectedGuidelineAuthor: '',
-    updateKey: 0,
     guidelineDepartment: '',
     newspeakVersion: '',
     linkingRule: false,
@@ -405,8 +388,6 @@ export default {
 
     dialogInner: false,
 
-    Case: [],
-
     rules: {
       clearFieldValid: [
         v => !!v || 'This field cannot be empty'
@@ -420,8 +401,6 @@ export default {
   methods: {
 
     receiveRouteToObject(obj) {
-      // while(this.isFetchingCases)
-      console.log(obj)
       this.selectedGuideline = obj
       this.dialog = true
     },
@@ -436,8 +415,6 @@ export default {
             console.log(resp.data)
             this.AllDepartments = []
             for (let i = 0; i < resp.data.length; i++) {
-              //this.Case.push('Case-' + resp.data[i].id + ":" + resp.data[i].title)
-              //this.AllDepartments.push(resp.data[i])
               Vue.set(this.AllDepartments, i, resp.data[i])
               console.log(this.AllDepartments[i])
               this.isFetchingDepartments = false
@@ -447,7 +424,6 @@ export default {
         console.log(err)
         if (this.doRefresh(err.response.status)) this.getListOfDepartments()
       })
-      Vue.$nextTick
 
     },
 
@@ -469,7 +445,6 @@ export default {
         console.log(err)
         if (this.doRefresh(err.response.status)) this.getListOfGuidelines()
       })
-      Vue.$nextTick
 
     },
 
@@ -555,25 +530,21 @@ export default {
         guideline: ''
       }
       this.dialog = false
-      //this.$emit('updateParent', {data2})
       this.loadingSave = false
 
     },
 
     openGuideline(object) {
       console.log("CLICK BUTTON WORKED")
-      this.caseViewMode = true
+      this.guidelineViewMode = true
       this.selectedGuideline = object
       console.log("author")
       console.log(this.selectedGuideline.author)
-      // this.selectedDepCategoryValue = object.mediaCategory.name
-      // this.selectedDepDesignationValue = object.designation.name
       this.object = object
       this.selectedGuidelineAuthor = object.author.name
       console.log("opening case" + object.id)
       this.getListOfRulesForGuideline(this.selectedGuideline)
       this.selectedGuidelineDepartment = object.department.name
-      //this.getListOfMediaProducts()
       this.dialog = true
     },
 
@@ -594,23 +565,8 @@ export default {
       })
     },
 
-
-    updateElements(CaseList) {
-      if (CaseList !== this.Case[0]) {
-        CaseList = CaseList.split(" ").pop()
-        //this.getCaseByID(CaseList)
-        this.removeButton = false
-      } else if (CaseList === this.Case[0]) {
-        this.CaseMedia = ''
-        this.removeButton = true
-      }
-    },
-
     updateOverlay() {
-      // this.Case = ['Добавить новый элемент']
-      // this.CaseList = this.Case[0]
       this.getListOfGuidelines()
-      //this.updateElements(this.CaseList)
     },
 
     changeColor() {
@@ -618,13 +574,11 @@ export default {
     },
   },
   beforeMount() {
-    //this.updateOverlay()
     this.getListOfGuidelines()
     this.getListOfDepartments()
     this.getEmployees()
   },
   mounted: function () {
-    console.log("YEEEEEEAAAA")
     this.$emit("mounted");
   }
 }
