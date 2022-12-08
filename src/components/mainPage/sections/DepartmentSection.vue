@@ -64,28 +64,32 @@
               style="border-radius: 10px;"
           />
 
-          <v-select :rules="rules.clearFieldValid" v-model="newDepartmentState" id="newDepartmentState" :items="departmentStates" label="Choose state">
+          <v-select :rules="rules.clearFieldValid" v-model="newDepartmentState" id="newDepartmentState"
+                    :items="departmentStates" label="Choose state">
           </v-select>
 
-          <v-select :rules="rules.clearFieldValid" v-model="selectedDesignation" id="designationList" :items="designations" label="Choose designation"
+          <v-select :rules="rules.clearFieldValid" v-model="selectedDesignation" id="designationList"
+                    :items="designations" label="Choose designation"
                     :item-text="'name'" :item-value="'id'">
             <option v-for="d in designations" v-bind:key="d.id" v-bind:value="d.name">
               {{ d.name }}
             </option>
           </v-select>
 
-          <v-select :rules="rules.clearFieldValid"  v-model="selectedCategory" id="categoryList" :items="categories" label="Choose media category"
+          <v-select :rules="rules.clearFieldValid" v-model="selectedCategory" id="categoryList" :items="categories"
+                    label="Choose media category"
                     :item-text="'name'" :item-value="'id'">
             <option v-for="cat in categories" v-bind:key="cat.id" v-bind:value="cat.name">
               {{ cat.name }}
             </option>
           </v-select>
-          <div label="Pick foundation date">
-          <v-date-picker
-              v-model="newDepartmentFoundationDate"
-              class="mt-4"
-          ></v-date-picker>
-          </div>
+          <v-text value="Pick foundation date">
+            Pick foundation date
+            <v-date-picker
+                v-model="newDepartmentFoundationDate"
+                class="mt-4"
+            ></v-date-picker>
+          </v-text>
           <v-btn style="margin-left: 25%; margin-bottom: 5%"
                  :color=changeColor()
                  outlined
@@ -151,19 +155,6 @@
                                 label="Choose state">
                       </v-select>
 
-<!--                      <v-text-->
-<!--                          light-->
-<!--                          label="Designation"-->
-<!--                          v-model="selectedDepartment.designation"-->
-<!--                          name="Designation"-->
-<!--                          :color=changeColor()-->
-<!--                          background-color=#EDF2F7-->
-<!--                          outlined-->
-<!--                          style="border-radius: 10px;"-->
-<!--                      >-->
-<!--                        {{ selectedDepDesignationValue }}-->
-<!--                      </v-text>-->
-
                       <v-text-field
                           :readonly="true"
                           light
@@ -175,13 +166,6 @@
                           outlined
                           style="border-radius: 10px;"
                       />
-
-                      <!--                      <v-select v-model="selectedDesignation" id="designationList" :items="designations" label="Choose designation"-->
-                      <!--                                :item-text="'name'" :item-value="'id'">-->
-                      <!--                        <option v-for="d in designations" v-bind:key="d.id" v-bind:value="d.name">-->
-                      <!--                          {{ d.name }}-->
-                      <!--                        </option>-->
-                      <!--                      </v-select>-->
 
                       <v-text
                           light
@@ -207,13 +191,6 @@
                           style="border-radius: 10px;"
                       />
 
-                      <!--                      <v-select v-model="selectedCategory" id="categoryList" :items="categories" label="Choose media category"-->
-                      <!--                                :item-text="'name'" :item-value="'id'">-->
-                      <!--                        <option v-for="cat in categories" v-bind:key="cat.id" v-bind:value="cat.name">-->
-                      <!--                          {{ cat.name }}-->
-                      <!--                        </option>-->
-                      <!--                      </v-select>-->
-
                       <v-text-field
                           :readonly="true"
                           light
@@ -226,11 +203,34 @@
                           style="border-radius: 10px;"
                       />
 
+                      <v-text value="Pick foundation date" v-if="selectedDepartment.dateTermination == undefined">
+                        Select date of termination (if this date is in the past the department will be terminated)
                       <v-date-picker
                           label="Choose termination date if needed"
-                          v-model="this.selectedDepartment.dateTermination"
+                          v-model="selectedDepartment.dateTermination"
                           class="mt-4"
                       ></v-date-picker>
+                      </v-text>
+
+                      <v-text-field v-if="selectedDepartment.dateTermination != undefined" :readonly="true"
+                                    light
+                                    label="Date Termination"
+                                    v-model="selectedDepartment.dateTermination"
+                                    name="Date Termination"
+                                    :color=changeColor()
+                                    background-color=#EDF2F7
+                                    outlined
+                                    style="border-radius: 10px;">
+                      </v-text-field>
+                      <v-btn v-if="selectedDepartment.dateTermination != undefined && selectedDepartment.status != 'Terminated'" style="margin-left: 25%; margin-bottom: 5%"
+                             :color=changeColor()
+                             outlined
+                             :loading="loadingSave"
+                             @click="selectedDepartment.dateTermination = null"
+                      >
+                        <v-icon style="margin-right: 8px">mdi-cloud-upload</v-icon>
+                        Change termination date
+                      </v-btn>
 
                       <v-btn style="margin-left: 25%; margin-bottom: 5%"
                              :color=changeColor()
@@ -254,7 +254,7 @@
                           outlined
                           style="border-radius: 10px;"
                       >
-                        {{departmentClosedCases}}
+                        {{ departmentClosedCases }}
                       </v-text-field>
 
                       <v-btn style="margin-left: 25%; margin-bottom: 5%"
@@ -306,7 +306,7 @@
         </v-list>
         <v-dialog v-model="alertTrue">
           <v-alert>
-            {{this.alertMessage}}
+            {{ this.alertMessage }}
           </v-alert>
         </v-dialog>
       </v-card>
@@ -547,7 +547,7 @@ export default {
             .then(resp => {
               console.log(resp.data)
               console.log(resp.data.cause.serverErrorMessage.message)
-              if(resp.data.cause == undefined)
+              if (resp.data.cause == undefined)
                 this.departmentEditorMode = false;
               //this.mediaEditorMode = false;
               else {
@@ -557,8 +557,10 @@ export default {
                 //   this.alertTrue = false
                 //   console.log("hide alert after 3 seconds");
                 // }, 5000)
-                setTimeout(() => {this.alertTrue = false
-                  console.log("hide alert after 3 seconds");}, 10000)
+                setTimeout(() => {
+                  this.alertTrue = false
+                  console.log("hide alert after 3 seconds");
+                }, 10000)
               }
             }).catch(err => {
           if (this.doRefresh(err.response.status)) this.submit()
@@ -584,9 +586,9 @@ export default {
       axios.create(this.getHeader()
       ).post(str, data)
           .then(resp => {
-            if(resp.data.cause == undefined)
+            if (resp.data.cause == undefined)
               console.log("all good")
-              //this.departmentEditorMode = false;
+                //this.departmentEditorMode = false;
             //this.mediaEditorMode = false;
             else {
               this.alertMessage = resp.data.cause.serverErrorMessage.message
@@ -595,8 +597,10 @@ export default {
               //   this.alertTrue = false
               //   console.log("hide alert after 3 seconds");
               // }, 5000)
-              setTimeout(() => {this.alertTrue = false
-                console.log("hide alert after 3 seconds");}, 10000)
+              setTimeout(() => {
+                this.alertTrue = false
+                console.log("hide alert after 3 seconds");
+              }, 10000)
             }
             console.log("Server responded:" + resp.data)
           }).catch(err => {

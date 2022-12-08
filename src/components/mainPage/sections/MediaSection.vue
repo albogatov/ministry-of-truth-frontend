@@ -261,9 +261,9 @@ export default {
     loadingRemove: false,
     loadingSave: false,
     mediaEditorMode: false,
-    caseViewMode: false,
+    mediaViewMode: false,
     newMediaState: 'Discovered',
-    absolute: true,
+    //absolute: true,
     valid: true,
     removeButton: true,
     AllMedia: [],
@@ -301,8 +301,6 @@ export default {
   methods: {
 
     receiveRouteToObject(obj) {
-      // while(this.isFetchingCases)
-      //   console.log('loading')
       this.selectedMedia = obj
       this.getListOfCasesForMedia()
       this.dialog = true
@@ -352,7 +350,6 @@ export default {
           .then(resp => {
             console.log(resp.data)
             for (let i = 0; i < resp.data.length; i++) {
-              //this.Case.push('Case-' + resp.data[i].id + ":" + resp.data[i].title)
               this.AllCases.push(resp.data[i])
               console.log(this.AllCases[i])
               this.isFetchingCases = false
@@ -387,7 +384,6 @@ export default {
           .then(resp => {
             console.log(resp.data)
             for (let i = 0; i < resp.data.length; i++) {
-              //this.Case.push('Case-' + resp.data[i].id + ":" + resp.data[i].title)
               this.publishers.push(resp.data[i])
               console.log(this.publishers[i])
               this.isFetchingPublishers = false
@@ -398,11 +394,6 @@ export default {
       })
     },
 
-    // isStillFetchingPublishers() {
-    //   if(this.selectedMedia.publisher.name == null)
-    //     this.isFetchingPublishers = true;
-    //   else this.isFetchingPublishers = false;
-    // },
 
     async submitMedia() {
       if (this.$refs.form.validate()) {
@@ -427,10 +418,6 @@ export default {
               else {
                 this.alertMessage = resp.data.cause.serverErrorMessage.message
                 this.alertTrue = true
-                // this.setInterval(() => {
-                //   this.alertTrue = false
-                //   console.log("hide alert after 3 seconds");
-                // }, 5000)
                 setTimeout(() => {this.alertTrue = false
                     console.log("hide alert after 3 seconds");}, 10000)
               }
@@ -454,26 +441,18 @@ export default {
       if (this.$refs.form.validate()) {
         this.loadingSave = true
         let str = "/api/app/caseMedia/save"
-        //console.log(this.selectedCategory)
         let data = {
           mediaId: media.id,
           caseId: mcase
         }
-        console.log("CaseMedia:" + mcase)
         axios.create(this.getHeader()
         ).post(str, data)
             .then(resp => {
-              //console.log(resp.data.cause.serverErrorMessage.message)
               if(resp.data.cause == undefined)
                 console.log("all good")
-                //this.mediaEditorMode = false;
               else {
                 this.alertMessage = resp.data.cause.serverErrorMessage.message
                 this.alertTrue = true
-                // this.setInterval(() => {
-                //   this.alertTrue = false
-                //   console.log("hide alert after 3 seconds");
-                // }, 5000)
                 setTimeout(() => {this.alertTrue = false
                   console.log("hide alert after 3 seconds");}, 10000)
               }
@@ -496,17 +475,14 @@ export default {
       if (this.$refs.form.validate()) {
         this.loadingSave = true
         let str = "/api/app/caseMedia/delete"
-        //console.log(this.selectedCategory)
         let data = {
           mediaId: this.selectedMedia.id,
           caseId: mcase.id
         }
-        console.log("CaseMedia:" + mcase.id + this.selectedMedia.id)
         axios.create(this.getHeader()
         ).post(str, data)
             .then(resp => {
               console.log(resp.data)
-              //this.mediaEditorMode = false;
             }).catch(err => {
           if (this.doRefresh(err.response.status)) this.submit()
         })
@@ -539,17 +515,11 @@ export default {
       axios.create(this.getHeader()
       ).post(str, data)
           .then(resp => {
-            //console.log(resp.data.cause.serverErrorMessage.message)
             if(resp.data.cause == undefined)
               console.log("All good")
-              //this.mediaEditorMode = false;
             else {
               this.alertMessage = resp.data.cause.serverErrorMessage.message
               this.alertTrue = true
-              // this.setInterval(() => {
-              //   this.alertTrue = false
-              //   console.log("hide alert after 3 seconds");
-              // }, 5000)
               setTimeout(() => {this.alertTrue = false
                 console.log("hide alert after 3 seconds");}, 10000)
             }
@@ -561,13 +531,12 @@ export default {
       this.updateOverlay()
 
       this.dialog = false
-      //this.$emit('updateParent', {data2})
       this.loadingSave = false
 
     },
 
     openMedia(object) {
-      this.caseViewMode = true
+      this.mediaViewMode = true
       this.selectedMedia = object
       console.log("Opened media")
       console.log(object)
@@ -575,26 +544,11 @@ export default {
       console.log("Selected media")
       console.log(this.selectedMedia)
       this.selectedMediaPublisher = object.publisher
-      //this.isStillFetchingPublishers()
       this.dialog = true
     },
 
-    updateElements(CaseList) {
-      if (CaseList !== this.Media[0]) {
-        CaseList = CaseList.split(" ").pop()
-        //this.getCaseByID(CaseList)
-        this.removeButton = false
-      } else if (CaseList === this.Media[0]) {
-        this.CaseMedia = ''
-        this.removeButton = true
-      }
-    },
-
     updateOverlay() {
-      // this.Case = ['Добавить новый элемент']
-      // this.CaseList = this.Case[0]
       this.getListOfMediaProducts()
-      //this.updateElements(this.CaseList)
     },
 
     changeColor() {
@@ -602,14 +556,12 @@ export default {
     },
   },
   beforeMount() {
-    //this.updateOverlay()
     this.getListOfPublishers()
     this.getCategories()
     this.getListOfMediaProducts()
     this.getListOfCases()
   },
   mounted: function () {
-    console.log("YEEEEEEAAAA")
     this.$emit("mounted")
   }
 }
