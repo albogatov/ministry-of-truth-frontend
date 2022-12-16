@@ -289,7 +289,7 @@
                     <v-btn
                         color="blue darken-1"
                         text
-                        @click="dialog = false;"
+                        @click="dialog = false; departmentTargetReached = ''; departmentClosedCases = '';"
                     >
                       Close
                     </v-btn>

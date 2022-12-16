@@ -120,6 +120,31 @@
                             </option>
                           </v-select>
 
+                          <v-btn style="margin-left: 25%; margin-bottom: 5%"
+                                 :color=changeColor()
+                                 outlined
+                                 :loading="loadingSave"
+                                 @click="checkEmployee"
+                                 v-if="accessLevel > 1"
+                          >
+                            <v-icon style="margin-right: 8px">mdi-cloud-upload</v-icon>
+                            See employee stats
+                          </v-btn>
+
+                          <v-text-field
+                              :readonly="true"
+                              light
+                              label="This employee solved cases:"
+                              v-model="employeeClosedCases"
+                              name="Name"
+                              :color=changeColor()
+                              background-color=#EDF2F7
+                              outlined
+                              style="border-radius: 10px;"
+                          >
+                            {{ employeeClosedCases }}
+                          </v-text-field>
+
                         </v-container>
                       </v-card-text>
                       <v-card-actions>
@@ -127,7 +152,7 @@
                         <v-btn
                             color="blue darken-1"
                             text
-                            @click="dialog = false;"
+                            @click="dialog = false; employeeClosedCases = ''"
                         >
                           Close
                         </v-btn>
@@ -176,6 +201,8 @@ export default {
     isFetchingDepartments: true,
     isFetchingEmployees: true,
     positions: [],
+    employeeClosedCases: "",
+    accessLevel: -1,
 
     rules: {
       clearFieldValid: [
@@ -214,6 +241,22 @@ export default {
 
           }).catch(err => {
         console.log(err)
+      })
+    },
+
+    checkEmployee() {
+      let str = "/api/app/employee/getStats"
+      let data = {
+        id: this.selectedEmployee.id
+      }
+      axios.create(this.getHeader()
+      ).post(str, data)
+          .then(resp => {
+            console.log(resp.data)
+            this.employeeClosedCases = resp.data;
+          }).catch(err => {
+        console.log(err)
+        if (this.doRefresh(err.response.status)) this.getEmployees()
       })
     },
 
@@ -278,6 +321,7 @@ export default {
     this.getListOfDepartments()
     this.getPositions()
     this.getEmployees()
+    this.accessLevel = localStorage.accessLevel
   },
   mounted: function () {
     this.$emit("mounted");
